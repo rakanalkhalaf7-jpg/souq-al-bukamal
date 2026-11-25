@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102c50">
+<title>سوق البوكمال | كل احتياجاتك بمكان واحد</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f4f6fa;color:#172b45}
+header{background:#102c50;color:white;padding:22px 16px}
+.container{max-width:1000px;margin:auto}
+.brand{font-size:27px;font-weight:bold}
+.slogan{color:#d5e5fa;margin-top:8px}
+.search{display:flex;gap:8px;margin-top:20px}
+input{min-width:0;flex:1;padding:14px;border:0;border-radius:10px;font-size:15px}
+button{border:0;border-radius:10px;padding:13px 18px;background:#e8a82d;color:#172b45;font-weight:bold;font-size:15px;cursor:pointer}
+.hero{padding:25px 16px;background:#e8f1fc;text-align:center}
+.hero h2{margin:0 0 10px}
+.hero p{color:#586b83}
+.add{background:#102c50;color:white}
+main{max-width:1000px;margin:auto;padding:20px 14px}
+h2{font-size:20px}
+.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.category{background:white;border-radius:13px;padding:17px 5px;text-align:center;box-shadow:0 2px 8px #0000000a;font-size:14px}
+.category span{display:block;font-size:27px;margin-bottom:8px}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.product{background:white;border-radius:13px;padding:15px;min-height:110px}
+.product p{color:#78869a;font-size:13px}
+footer{text-align:center;background:#102c50;color:white;padding:25px 10px;margin-top:30px}
+@media(min-width:650px){.categories{grid-template-columns:repeat(5,1fr)}.products{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header>
+<div class="container">
+<div class="brand">🛍️ سوق البوكمال</div>
+<div class="slogan">كل احتياجاتك بمكان واحد.</div>
+<div class="search">
+<input id="search" placeholder="ابحث عن موبايل، سيارة، كمبيوتر...">
+<button onclick="searchProducts()">بحث</button>
+</div>
+</div>
+</header>
+
+<section class="hero">
+<h2>أهلاً بك في سوق البوكمال</h2>
+<p>بيع وشراء وتبادل المنتجات بسهولة من مكان واحد.</p>
+<button class="add" onclick="alert('قريباً: إضافة إعلانك إلى سوق البوكمال')">＋ أضف إعلانك</button>
+</section>
+
+<main>
+<h2>تسوق حسب القسم</h2>
+<div class="categories">
+<div class="category"><span>📱</span>موبايلات</div>
+<div class="category"><span>💻</span>كمبيوتر ولابتوب</div>
+<div class="category"><span>🎮</span>بلايستيشن وألعاب</div>
+<div class="category"><span>📺</span>إلكترونيات</div>
+<div class="category"><span>🏠</span>أثاث منزلي</div>
+<div class="category"><span>🚗</span>سيارات ودراجات</div>
+<div class="category"><span>👕</span>ملابس وإكسسوارات</div>
+<div class="category"><span>🏡</span>عقارات</div>
+<div class="category"><span>📦</span>أخرى</div>
+</div>
+
+<h2 style="margin-top:30px">أحدث الإعلانات</h2>
+<div class="products" id="products">
+<div class="product"><strong>مرحباً بك في سوق البوكمال</strong><p>ستظهر إعلانات البائعين هنا قريباً.</p></div>
+</div>
+</main>
+
+<footer>
+<strong>سوق البوكمال</strong>
+<p>كل احتياجاتك بمكان واحد.</p>
+</footer>
+
+<script>
+function searchProducts(){
+const q=document.getElementById('search').value.trim();
+if(!q){alert('اكتب اسم المنتج الذي تبحث عنه');return;}
+alert('سيتم تفعيل البحث عن: '+q+' عند ربط قاعدة البيانات');
+}
+</script>
+</body>
+                    </html>
+                    
