@@ -1,87 +1,43 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#102c50">
-<title>سوق البوكمال | كل احتياجاتك بمكان واحد</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#174a35"><title>سوق البوكمال</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f4f6fa;color:#172b45}
-header{background:#102c50;color:white;padding:22px 16px}
-.container{max-width:1000px;margin:auto}
-.brand{font-size:27px;font-weight:bold}
-.slogan{color:#d5e5fa;margin-top:8px}
-.search{display:flex;gap:8px;margin-top:20px}
-input{min-width:0;flex:1;padding:14px;border:0;border-radius:10px;font-size:15px}
-button{border:0;border-radius:10px;padding:13px 18px;background:#e8a82d;color:#172b45;font-weight:bold;font-size:15px;cursor:pointer}
-.hero{padding:25px 16px;background:#e8f1fc;text-align:center}
-.hero h2{margin:0 0 10px}
-.hero p{color:#586b83}
-.add{background:#102c50;color:white}
-main{max-width:1000px;margin:auto;padding:20px 14px}
-h2{font-size:20px}
-.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.category{background:white;border-radius:13px;padding:17px 5px;text-align:center;box-shadow:0 2px 8px #0000000a;font-size:14px}
-.category span{display:block;font-size:27px;margin-bottom:8px}
-.products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.product{background:white;border-radius:13px;padding:15px;min-height:110px}
-.product p{color:#78869a;font-size:13px}
-footer{text-align:center;background:#102c50;color:white;padding:25px 10px;margin-top:30px}
-@media(min-width:650px){.categories{grid-template-columns:repeat(5,1fr)}.products{grid-template-columns:repeat(3,1fr)}}
-</style>
-</head>
+:root{--green:#174a35;--green2:#23734c;--mint:#eaf4ed;--ink:#17231b;--muted:#758179;--line:#e6ebe7;--bg:#f7f9f7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}
+header{background:linear-gradient(130deg,#133d2b,#23724b);color:white;padding:22px 18px 26px;border-radius:0 0 25px 25px}
+.top{max-width:980px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px}.logo{width:45px;height:45px;border-radius:14px;background:#ffffff20;display:grid;place-items:center;font-size:25px}.brand h1{font-size:20px;margin:0}.brand small{display:block;color:#c9e2d2;margin-top:3px}.addTop{border:0;border-radius:12px;padding:11px 14px;background:#fff;color:var(--green);font-weight:800;cursor:pointer}
+.hero{max-width:980px;margin:25px auto 0;padding:0 4px}.hero h2{font-size:24px;margin:0 0 7px}.hero p{margin:0;color:#d4e7da;font-size:14px}.search{margin-top:19px;display:flex;background:white;border-radius:14px;padding:5px;box-shadow:0 5px 20px #0001}.search input{border:0;outline:0;flex:1;padding:12px;font-size:15px;min-width:0}.search button{border:0;border-radius:10px;background:var(--green);color:white;padding:0 18px;font-weight:bold}
+main{max-width:980px;margin:20px auto;padding:0 15px}.categories{display:flex;gap:9px;overflow:auto;padding:3px 0 12px}.cat{white-space:nowrap;border:1px solid var(--line);background:white;border-radius:12px;padding:11px 14px;cursor:pointer;color:#344239}.cat.active{background:var(--green);border-color:var(--green);color:white}.sectionHead{display:flex;align-items:center;justify-content:space-between;margin:13px 0}.sectionHead h3{margin:0;font-size:19px}.sectionHead span{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden}.photo{height:145px;background:#edf2ee;display:grid;place-items:center;color:#8b9b90;font-size:42px;overflow:hidden}.photo img{width:100%;height:100%;object-fit:cover}.cardBody{padding:12px}.card h4{margin:0 0 7px;font-size:15px;line-height:1.45}.price{color:var(--green2);font-weight:900;font-size:17px}.meta{font-size:12px;color:var(--muted);margin-top:7px}.contact{display:block;text-align:center;margin-top:11px;text-decoration:none;background:#edf6ef;color:#1c603a;border-radius:10px;padding:10px;font-weight:800;font-size:13px}.empty{grid-column:1/-1;background:white;border:1px dashed #ccd8cf;border-radius:15px;padding:30px;text-align:center;color:#778279}
+footer{text-align:center;color:#89928b;font-size:12px;padding:25px 15px}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:5;align-items:center;justify-content:center;padding:16px}.modal.open{display:flex}.box{background:white;width:min(460px,100%);max-height:90vh;overflow:auto;border-radius:18px;padding:18px}.box h3{margin:0 0 14px}.box label{display:block;font-size:13px;font-weight:700;margin:11px 0 5px}.box input,.box select,.box textarea{width:100%;border:1px solid #dce5de;border-radius:10px;padding:11px;font:inherit;outline-color:var(--green)}.box textarea{min-height:75px;resize:vertical}.actions{display:flex;gap:9px;margin-top:15px}.actions button{flex:1;border:0;border-radius:10px;padding:12px;font-weight:800;cursor:pointer}.submit{background:var(--green);color:white}.cancel{background:#edf1ee;color:#39463d}.note{font-size:12px;color:#778179;line-height:1.6;margin-top:10px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.photo{height:180px}.hero{padding:0 16px}.hero h2{font-size:29px}}
+</style></head>
 <body>
-<header>
-<div class="container">
-<div class="brand">🛍️ سوق البوكمال</div>
-<div class="slogan">كل احتياجاتك بمكان واحد.</div>
-<div class="search">
-<input id="search" placeholder="ابحث عن موبايل، سيارة، كمبيوتر...">
-<button onclick="searchProducts()">بحث</button>
-</div>
-</div>
-</header>
-
-<section class="hero">
-<h2>أهلاً بك في سوق البوكمال</h2>
-<p>بيع وشراء وتبادل المنتجات بسهولة من مكان واحد.</p>
-<button class="add" onclick="alert('قريباً: إضافة إعلانك إلى سوق البوكمال')">＋ أضف إعلانك</button>
-</section>
-
-<main>
-<h2>تسوق حسب القسم</h2>
-<div class="categories">
-<div class="category"><span>📱</span>موبايلات</div>
-<div class="category"><span>💻</span>كمبيوتر ولابتوب</div>
-<div class="category"><span>🎮</span>بلايستيشن وألعاب</div>
-<div class="category"><span>📺</span>إلكترونيات</div>
-<div class="category"><span>🏠</span>أثاث منزلي</div>
-<div class="category"><span>🚗</span>سيارات ودراجات</div>
-<div class="category"><span>👕</span>ملابس وإكسسوارات</div>
-<div class="category"><span>🏡</span>عقارات</div>
-<div class="category"><span>📦</span>أخرى</div>
-</div>
-
-<h2 style="margin-top:30px">أحدث الإعلانات</h2>
-<div class="products" id="products">
-<div class="product"><strong>مرحباً بك في سوق البوكمال</strong><p>ستظهر إعلانات البائعين هنا قريباً.</p></div>
-</div>
-</main>
-
-<footer>
-<strong>سوق البوكمال</strong>
-<p>كل احتياجاتك بمكان واحد.</p>
-</footer>
-
+<header><div class="top"><div class="brand"><div class="logo">🛒</div><div><h1>سوق البوكمال</h1><small>بيع • شراء • تبديل</small></div></div><button class="addTop" onclick="openForm()">＋ أضف إعلان</button></div>
+<div class="hero"><h2>كل شي تحتاجه.. تلاقيه بمدينتك</h2><p>سوق إلكتروني لأهل البوكمال — بيع أغراضك ودوّر على اللي تحتاجه</p><div class="search"><input id="search" placeholder="ابحث عن موبايل، بلايستيشن، كمبيوتر..." oninput="render()"><button onclick="render()">بحث</button></div></div></header>
+<main><div class="categories" id="categories"></div><div class="sectionHead"><h3 id="heading">أحدث الإعلانات</h3><span id="count"></span></div><div class="grid" id="listings"></div></main>
+<footer>سوق البوكمال © <span id="year"></span> — منصة أهل المدينة</footer>
+<div class="modal" id="modal"><div class="box"><h3>إضافة إعلان جديد</h3><form id="form"><label>اسم السلعة *</label><input id="name" required placeholder="مثلاً: سامسونغ A54"><label>القسم</label><select id="category"><option>موبايلات</option><option>كمبيوتر ولابتوب</option><option>بلايستيشن وألعاب</option><option>إلكترونيات</option><option>سيارات وموتورات</option><option>أثاث وأغراض منزلية</option><option>ملابس</option><option>أخرى</option></select><label>السعر *</label><input id="price" required placeholder="مثلاً: 150 دولار أو 1,500,000 ليرة"><label>تفاصيل السلعة</label><textarea id="description" placeholder="الحالة، المواصفات، وهل يوجد تبديل..."></textarea><label>رابط صورة (اختياري حالياً)</label><input id="image" placeholder="رابط صورة مباشر"><label>رقم واتساب مع رمز البلد *</label><input id="phone" required placeholder="مثلاً 9639XXXXXXXX"><div class="actions"><button class="submit" type="submit">حفظ الإعلان</button><button class="cancel" type="button" onclick="closeForm()">إلغاء</button></div></form><p class="note" id="statusNote">الموقع متصل بقاعدة بيانات مشتركة. الإعلانات التي تنشرها ستظهر لجميع الزوار.</p></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-function searchProducts(){
-const q=document.getElementById('search').value.trim();
-if(!q){alert('اكتب اسم المنتج الذي تبحث عنه');return;}
-alert('سيتم تفعيل البحث عن: '+q+' عند ربط قاعدة البيانات');
-}
-</script>
-</body>
-                    </html>
-                    
+const SUPABASE_URL = 'https://mrkinvslilxfzurzftxd.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_hKQ1Nuyg2Ukkq5vAlF9isw_RC5zg06d';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const cats=['الكل','موبايلات','كمبيوتر ولابتوب','بلايستيشن وألعاب','إلكترونيات','سيارات وموتورات','أثاث وأغراض منزلية','ملابس','أخرى'];
+let active='الكل';
+let ads=[];
+const note=document.getElementById('statusNote');
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function safeImage(url){try{const u=new URL(url);return ['http:','https:'].includes(u.protocol)?u.href:''}catch(e){return ''}}
+function iconFor(c){return c==='موبايلات'?'📱':c==='كمبيوتر ولابتوب'?'💻':c==='بلايستيشن وألعاب'?'🎮':c==='إلكترونيات'?'🎧':c==='سيارات وموتورات'?'🚗':c==='أثاث وأغراض منزلية'?'🛋️':c==='ملابس'?'👕':'📦'}
+function renderCats(){document.getElementById('categories').innerHTML=cats.map(c=>`<button class="cat ${c===active?'active':''}" onclick="setCat('${c}')">${c}</button>`).join('')}
+function setCat(c){active=c;render()}
+function render(){renderCats();const q=document.getElementById('search').value.trim().toLowerCase();const data=ads.filter(x=>(active==='الكل'||x.category===active)&&(`${x.title||''} ${x.category||''} ${x.description||''}`).toLowerCase().includes(q));document.getElementById('count').textContent=data.length+' إعلان';document.getElementById('heading').textContent=active==='الكل'?'أحدث الإعلانات':active;document.getElementById('listings').innerHTML=data.length?data.map(x=>{const image=safeImage(x.image_url);const phone=String(x.phone||'').replace(/[^0-9]/g,'');return `<article class="card"><div class="photo">${image?`<img src="${esc(image)}" alt="${esc(x.title)}" onerror="this.style.display='none'">`:iconFor(x.category)}</div><div class="cardBody"><h4>${esc(x.title)}</h4><div class="price">${esc(x.price)}</div><div class="meta">📍 ${esc(x.city||'البوكمال')} · ${esc(x.category)}</div>${x.description?`<div class="meta">${esc(x.description)}</div>`:''}${phone?`<a class="contact" target="_blank" rel="noopener" href="https://wa.me/${phone}">تواصل مع البائع عبر واتساب</a>`:''}</div></article>`}).join(''):'<div class="empty">ما لقينا إعلانات بهالقسم حالياً. كن أول من يضيف إعلاناً!</div>'}
+async function loadAds(){note.textContent='جاري تحميل الإعلانات...';const {data,error}=await db.from('ads').select('id,title,category,description,price,phone,image_url,city,status,created_at').eq('status','active').order('created_at',{ascending:false});if(error){note.textContent='تعذر تحميل الإعلانات: '+error.message;return}ads=data||[];note.textContent='الإعلانات محفوظة في قاعدة بيانات مشتركة وتظهر لجميع الزوار.';render()}
+function openForm(){document.getElementById('modal').classList.add('open')}function closeForm(){document.getElementById('modal').classList.remove('open')}
+document.getElementById('form').addEventListener('submit',async e=>{e.preventDefault();const button=e.target.querySelector('.submit');button.disabled=true;button.textContent='جاري النشر...';const rawImage=document.getElementById('image').value.trim();const image=safeImage(rawImage);if(rawImage&&!image){alert('رابط الصورة غير صحيح. استخدم رابطاً يبدأ بـ https://');button.disabled=false;button.textContent='حفظ الإعلان';return}const item={title:document.getElementById('name').value.trim(),category:document.getElementById('category').value,price:document.getElementById('price').value.trim(),description:document.getElementById('description').value.trim()||null,image_url:image||null,phone:document.getElementById('phone').value.trim().replace(/[^0-9]/g,''),city:'البوكمال',status:'active'};if(item.phone.length<7||item.phone.length>20){alert('تأكد من رقم واتساب مع رمز البلد.');button.disabled=false;button.textContent='حفظ الإعلان';return}const {error}=await db.from('ads').insert(item);button.disabled=false;button.textContent='حفظ الإعلان';if(error){alert('ما قدرنا ننشر الإعلان: '+error.message);return}e.target.reset();closeForm();await loadAds();alert('تم نشر إعلانك بنجاح، وصار ظاهراً لجميع الزوار.');});
+document.getElementById('year').textContent=new Date().getFullYear();
+loadAds();
+</script></body></html>
