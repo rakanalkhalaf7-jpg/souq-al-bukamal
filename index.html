@@ -1,261 +1,435 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#174a35">
 <title>سوق البوكمال</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--green:#174a35;--green2:#23734c;--bg:#f7f9f7;--line:#e6ebe7;--muted:#758179}
+:root{--g:#174a35;--g2:#23734c;--bg:#f5f8f5;--line:#e3eae4;--muted:#718078}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:#17231b;font-family:Tahoma,Arial,sans-serif}
-header{background:linear-gradient(130deg,#133d2b,#23724b);color:white;padding:22px 18px 26px;border-radius:0 0 25px 25px}
-.top{max-width:980px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header{background:linear-gradient(130deg,#133d2b,#23724b);color:white;padding:22px 16px 28px;border-radius:0 0 25px 25px}
+.wrap{max-width:1050px;margin:auto;padding:0 14px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px}
 .logo{width:45px;height:45px;border-radius:14px;background:#ffffff20;display:grid;place-items:center;font-size:25px}
 .brand h1{font-size:20px;margin:0}
-.brand small{display:block;color:#c9e2d2;margin-top:3px}
-button{cursor:pointer;font:inherit}
-.addTop{border:0;border-radius:12px;padding:11px 14px;background:white;color:var(--green);font-weight:bold}
-.hero{max-width:980px;margin:25px auto 0}
-.hero h2{font-size:24px;margin:0 0 7px}
-.hero p{margin:0;color:#d4e7da;font-size:14px}
-.search{margin-top:19px;display:flex;background:white;border-radius:14px;padding:5px}
-.search input{border:0;outline:0;flex:1;padding:12px;font-size:15px;min-width:0}
-.search button{border:0;border-radius:10px;background:var(--green);color:white;padding:0 18px;font-weight:bold}
-main{max-width:980px;margin:20px auto;padding:0 15px}
-.categories{display:flex;gap:9px;overflow:auto;padding:3px 0 12px}
-.cat{white-space:nowrap;border:1px solid var(--line);background:white;border-radius:12px;padding:11px 14px;color:#344239}
-.cat.active{background:var(--green);border-color:var(--green);color:white}
-.sectionHead{display:flex;align-items:center;justify-content:space-between;margin:13px 0}
-.sectionHead h3{margin:0;font-size:19px}
-.sectionHead span{color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card{background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.photo{height:145px;background:#edf2ee;display:grid;place-items:center;color:#8b9b90;font-size:42px;overflow:hidden}
-.photo img{width:100%;height:100%;object-fit:cover}
-.cardBody{padding:12px}
-.card h4{margin:0 0 7px;font-size:15px;line-height:1.45}
-.price{color:var(--green2);font-weight:900;font-size:17px}
-.meta{font-size:12px;color:var(--muted);margin-top:7px}
-.contact{display:block;text-align:center;margin-top:11px;text-decoration:none;background:#edf6ef;color:#1c603a;border-radius:10px;padding:10px;font-weight:bold;font-size:13px}
-.empty{grid-column:1/-1;background:white;border:1px dashed #ccd8cf;border-radius:15px;padding:30px;text-align:center;color:#778279}
-footer{text-align:center;color:#89928b;font-size:12px;padding:25px 15px}
-.modal{display:none;position:fixed;inset:0;background:#0008;z-index:5;align-items:center;justify-content:center;padding:16px}
-.modal.open{display:flex}
-.box{background:white;width:min(460px,100%);max-height:90vh;overflow:auto;border-radius:18px;padding:18px}
-.box h3{margin:0 0 14px}
-.box label{display:block;font-size:13px;font-weight:bold;margin:11px 0 5px}
-.box input,.box select,.box textarea{width:100%;border:1px solid #dce5de;border-radius:10px;padding:11px;font:inherit}
-.box textarea{min-height:75px;resize:vertical}
-.actions{display:flex;gap:9px;margin-top:15px}
-.actions button{flex:1;border:0;border-radius:10px;padding:12px;font-weight:bold}
-.submit{background:var(--green);color:white}
-.cancel{background:#edf1ee;color:#39463d}
-.note{font-size:12px;color:#778179;line-height:1.6;margin-top:10px}
-@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.photo{height:180px}.hero{padding:0 16px}.hero h2{font-size:29px}}
+.brand small{display:block;color:#c9e2d2;margin-top:4px}
+button{cursor:pointer;font:inherit;border:0}
+.btn{padding:11px 15px;border-radius:11px;font-weight:bold}
+.white{background:white;color:var(--g)}
+.green{background:var(--g);color:white}
+.soft{background:#e8f1eb;color:var(--g)}
+.red{background:#fee9e7;color:#a32d25}
+.gray{background:#edf0ed;color:#38453d}
+.hero{margin:25px auto 0}
+.hero h2{font-size:25px;margin:0 0 8px}
+.hero p{color:#d5e8da;margin:0;font-size:14px}
+main{max-width:1050px;margin:22px auto;padding:0 14px}
+.searchbox{display:flex;gap:8px;margin:18px 0 12px}
+input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:white;font:inherit;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--g2)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px}
+.chip{padding:9px 13px;border:1px solid var(--line);border-radius:30px;background:white;color:#34443a}
+.chip.active{background:var(--g);color:white}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 0 14px}
+.sectionhead h2{font-size:19px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.card{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden}
+.card img{width:100%;height:175px;object-fit:cover;background:#edf1ed}
+.noimage{height:130px;display:grid;place-items:center;background:#edf2ed;font-size:42px}
+.cardbody{padding:13px}
+.card h3{font-size:16px;margin:0 0 9px;line-height:1.5}
+.price{font-weight:bold;color:var(--g2);margin:8px 0}
+.meta{font-size:12px;color:var(--muted);line-height:1.8}
+.desc{font-size:13px;line-height:1.7;color:#4e5a52;margin:8px 0;white-space:pre-wrap}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.actions button{padding:8px 10px;border-radius:9px;font-size:12px}
+.panel,.formbox,.authbox{background:white;border:1px solid var(--line);border-radius:16px;padding:17px;margin:15px 0}
+.hidden{display:none!important}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
+.note{font-size:12px;color:var(--muted);line-height:1.7}
+.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;background:#fff3d7;color:#815c0b}
+.status.active{background:#e0f3e5;color:#17653a}
+.status.hiddenstatus{background:#edf0f1;color:#59645d}
+.status.rejected{background:#fee9e7;color:#a32d25}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tabs button{padding:10px 13px;border-radius:10px;background:#edf1ed;color:#34443a}
+.tabs button.active{background:var(--g);color:white}
+.empty{text-align:center;padding:35px 12px;color:var(--muted);background:white;border-radius:14px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 12px}
+#message{padding:11px;border-radius:10px;margin:12px 0;font-size:13px;display:none;line-height:1.7}
+#message.ok{display:block;background:#e5f5e9;color:#17653a}
+#message.err{display:block;background:#fee9e7;color:#a32d25}
+@media(max-width:520px){.searchbox{flex-direction:column}.hero h2{font-size:21px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card img{height:130px}.cardbody{padding:10px}.actions button{font-size:11px}}
 </style>
 </head>
 <body>
+
 <header>
-<div class="top">
-<div class="brand"><div class="logo">🛒</div><div><h1>سوق البوكمال</h1><small>بيع • شراء • تبديل</small></div></div>
-<button class="addTop" onclick="openForm()">＋ أضف إعلان</button>
-</div>
-<div class="hero">
-<h2>كل شي تحتاجه.. تلاقيه بمدينتك</h2>
-<p>سوق إلكتروني لأهل البوكمال — بيع أغراضك ودوّر على اللي تحتاجه</p>
-<div class="search"><input id="search" placeholder="ابحث عن موبايل، بلايستيشن، كمبيوتر..." oninput="render()"><button onclick="render()">بحث</button></div>
-</div>
+ <div class="wrap">
+  <div class="top">
+   <div class="brand">
+    <div class="logo">🛒</div>
+    <div><h1>سوق البوكمال</h1><small>بيع وشراء بكل سهولة</small></div>
+   </div>
+   <div class="top">
+    <button class="btn white" id="addTop">＋ أضف إعلانك</button>
+    <button class="btn white hidden" id="loginTop">تسجيل الدخول</button>
+    <button class="btn white hidden" id="accountTop">حسابي</button>
+   </div>
+  </div>
+  <div class="hero">
+   <h2>سوق أهل البوكمال بين إيديك</h2>
+   <p>موبايلات، كمبيوترات، سيارات، أثاث، وأشياء كثيرة للبيع والشراء.</p>
+  </div>
+ </div>
 </header>
 
 <main>
-<div class="categories" id="categories"></div>
-<div class="sectionHead"><h3 id="heading">أحدث الإعلانات</h3><span id="count"></span></div>
-<div class="grid" id="listings"></div>
+ <div id="message"></div>
+
+ <section id="authBox" class="authbox hidden">
+  <div class="sectionhead"><h2 id="authTitle">تسجيل الدخول</h2><button class="btn gray" id="closeAuth">إغلاق</button></div>
+  <p class="note">سجّل بالبريد الإلكتروني حتى تقدر تنشر إعلانك.</p>
+  <form id="authForm">
+   <div class="field"><label>البريد الإلكتروني</label><input id="email" type="email" required autocomplete="email" placeholder="name@example.com"></div>
+   <div class="field"><label>كلمة المرور</label><input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="ستة أحرف على الأقل"></div>
+   <button class="btn green" id="authSubmit" type="submit">دخول</button>
+  </form>
+  <p class="note" id="authHint">ما عندك حساب؟ <a href="#" id="toggleAuth">إنشاء حساب جديد</a></p>
+ </section>
+
+ <section id="accountBox" class="panel hidden">
+  <div class="sectionhead"><h2>حسابك</h2><button class="btn gray" id="logoutBtn">تسجيل الخروج</button></div>
+  <p id="accountEmail" class="note"></p>
+  <p id="adminNotice" class="note hidden">أنت مسجل بصلاحية مدير سوق البوكمال.</p>
+ </section>
+
+ <section id="adFormBox" class="formbox hidden">
+  <div class="sectionhead"><h2>إضافة إعلان جديد</h2><button class="btn gray" id="closeAdForm">إغلاق</button></div>
+  <form id="adForm">
+   <div class="field"><label>عنوان الإعلان</label><input id="title" required minlength="2" maxlength="100" placeholder="مثلاً: موبايل سامسونغ للبيع"></div>
+   <div class="field"><label>القسم</label>
+    <select id="category" required>
+     <option value="">اختر القسم</option>
+     <option>موبايلات</option><option>كمبيوتر ولابتوب</option><option>بلايستيشن وألعاب</option><option>سيارات ودراجات</option><option>أثاث منزلي</option><option>أجهزة كهربائية</option><option>عقارات</option><option>ملابس</option><option>مستلزمات أخرى</option>
+    </select>
+   </div>
+   <div class="field"><label>السعر (اختياري)</label><input id="price" placeholder="مثلاً: 150 دولار أو قابل للتفاوض"></div>
+   <div class="field"><label>رقم الهاتف أو واتساب</label><input id="phone" required minlength="7" maxlength="20" placeholder="09xxxxxxxx"></div>
+   <div class="field"><label>وصف السلعة</label><textarea id="description" rows="4" placeholder="اكتب تفاصيل السلعة وحالتها..."></textarea></div>
+   <div class="field"><label>صورة السلعة (اختياري)</label><input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp"><p class="note">JPG أو PNG أو WebP، الحد الأقصى 5 ميغابايت.</p></div>
+   <button class="btn green" id="submitAd" type="submit">إرسال الإعلان للمراجعة</button>
+   <p class="note">لن يظهر إعلانك للزوار حتى يراجعه المدير ويوافق عليه.</p>
+  </form>
+ </section>
+
+ <div class="searchbox">
+  <input id="search" placeholder="ابحث عن موبايل، سيارة، كمبيوتر...">
+  <button class="btn green" id="searchBtn">بحث</button>
+ </div>
+ <div class="filters" id="filters">
+  <button class="chip active" data-category="الكل">الكل</button>
+  <button class="chip" data-category="موبايلات">موبايلات</button>
+  <button class="chip" data-category="كمبيوتر ولابتوب">كمبيوتر</button>
+  <button class="chip" data-category="بلايستيشن وألعاب">بلايستيشن</button>
+  <button class="chip" data-category="سيارات ودراجات">سيارات</button>
+  <button class="chip" data-category="أثاث منزلي">أثاث</button>
+  <button class="chip" data-category="أجهزة كهربائية">أجهزة كهربائية</button>
+  <button class="chip" data-category="عقارات">عقارات</button>
+  <button class="chip" data-category="مستلزمات أخرى">أخرى</button>
+ </div>
+
+ <section>
+  <div class="sectionhead"><h2>أحدث الإعلانات</h2><span class="note" id="count"></span></div>
+  <div id="adsGrid" class="grid"><div class="empty">جاري تحميل الإعلانات...</div></div>
+ </section>
+
+ <section id="adminBox" class="panel hidden">
+  <div class="sectionhead"><h2>🛡️ لوحة إدارة سوق البوكمال</h2><span class="status active">مدير</span></div>
+  <p class="note">الإعلانات الجديدة لا تظهر للزوار إلا بعد موافقتك.</p>
+  <div class="tabs">
+   <button class="active" data-admin-filter="pending">بانتظار المراجعة</button>
+   <button data-admin-filter="all">كل الإعلانات</button>
+   <button data-admin-filter="active">المنشورة</button>
+   <button data-admin-filter="hidden">المخفية</button>
+   <button data-admin-filter="rejected">المرفوضة</button>
+  </div>
+  <div id="adminGrid" class="grid"><div class="empty">جاري تحميل لوحة الإدارة...</div></div>
+ </section>
 </main>
 
-<footer>سوق البوكمال © <span id="year"></span> — منصة أهل المدينة</footer>
+<footer>سوق البوكمال © 2026 — منصة أهل البوكمال للبيع والشراء</footer>
 
-<div class="modal" id="modal">
-<div class="box">
-<h3>إضافة إعلان جديد</h3>
-<form id="form">
-<label>اسم السلعة *</label>
-<input id="name" required maxlength="100" placeholder="مثلاً: سامسونغ A54">
-
-<label>القسم *</label>
-<select id="category">
-<option>موبايلات</option>
-<option>كمبيوتر ولابتوب</option>
-<option>بلايستيشن وألعاب</option>
-<option>إلكترونيات</option>
-<option>سيارات وموتورات</option>
-<option>أثاث وأغراض منزلية</option>
-<option>ملابس</option>
-<option>أخرى</option>
-</select>
-
-<label>السعر *</label>
-<input id="price" required maxlength="60" placeholder="مثلاً: 150 دولار أو 1,500,000 ليرة">
-
-<label>تفاصيل السلعة</label>
-<textarea id="description" maxlength="1000" placeholder="الحالة، المواصفات، وهل يوجد تبديل..."></textarea>
-
-<label>صورة السلعة (اختياري)</label>
-<input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp">
-<p class="note">اختر صورة من معرض هاتفك. الصيغ المدعومة JPG وPNG وWebP، والحد الأقصى 5 ميغابايت.</p>
-
-<label>رقم واتساب مع رمز البلد *</label>
-<input id="phone" required inputmode="tel" maxlength="20" placeholder="مثلاً 9639XXXXXXXX">
-
-<div class="actions">
-<button class="submit" type="submit">حفظ الإعلان</button>
-<button class="cancel" type="button" onclick="closeForm()">إلغاء</button>
-</div>
-</form>
-<p class="note" id="statusNote">الإعلانات المنشورة تظهر لجميع الزوار.</p>
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL='https://mrkinvslilxfzurzftxd.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY='sb_publishable_hKQ1Nuyg2Ukkq5vAlF9isw_RC5zg06d';
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-const BUCKET='marketplace-images';
+const SUPABASE_URL = 'https://mrkinvslilxfzurzftxd.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_hKQ1Nuyg2Ukkq5vAlF9isw_RC5zg06d';
+const BUCKET = 'marketplace-images';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const cats=['الكل','موبايلات','كمبيوتر ولابتوب','بلايستيشن وألعاب','إلكترونيات','سيارات وموتورات','أثاث وأغراض منزلية','ملابس','أخرى'];
-let active='الكل';
-let ads=[];
+let currentUser = null;
+let isAdmin = false;
+let allAdminAds = [];
+let selectedCategory = 'الكل';
+let adminFilter = 'pending';
+let authMode = 'login';
 
-function esc(s){
-return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const $ = id => document.getElementById(id);
+
+function message(text,type='ok'){
+ const el=$('message');
+ el.textContent=text;
+ el.className=type;
+ el.style.display='block';
+ window.scrollTo({top:0,behavior:'smooth'});
 }
-function safeImage(url){
-try{
-const u=new URL(url);
-return ['http:','https:'].includes(u.protocol)?u.href:'';
-}catch(e){return '';}
+function clearMessage(){
+ $('message').style.display='none';
+ $('message').textContent='';
 }
-function iconFor(c){
-return c==='موبايلات'?'📱':
-c==='كمبيوتر ولابتوب'?'💻':
-c==='بلايستيشن وألعاب'?'🎮':
-c==='إلكترونيات'?'🎧':
-c==='سيارات وموتورات'?'🚗':
-c==='أثاث وأغراض منزلية'?'🛋️':
-c==='ملابس'?'👕':'📦';
+function esc(value){
+ return String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function renderCats(){
-document.getElementById('categories').innerHTML=cats.map(c=>
-`<button class="cat ${c===active?'active':''}" onclick="setCat('${c}')">${c}</button>`
-).join('');
+function statusName(s){
+ return ({pending:'قيد المراجعة',active:'منشور',hidden:'مخفي',rejected:'مرفوض'})[s]||s;
 }
-function setCat(c){active=c;render();}
-function render(){
-renderCats();
-const q=document.getElementById('search').value.trim().toLowerCase();
-const data=ads.filter(x=>(active==='الكل'||x.category===active)&&
-(`${x.title||''} ${x.category||''} ${x.description||''}`).toLowerCase().includes(q));
-document.getElementById('count').textContent=data.length+' إعلان';
-document.getElementById('heading').textContent=active==='الكل'?'أحدث الإعلانات':active;
-document.getElementById('listings').innerHTML=data.length?data.map(x=>{
-const image=safeImage(x.image_url);
-const phone=String(x.phone||'').replace(/[^0-9]/g,'');
-return `<article class="card">
-<div class="photo">${image?`<img src="${esc(image)}" alt="${esc(x.title)}" onerror="this.style.display='none'">`:iconFor(x.category)}</div>
-<div class="cardBody">
-<h4>${esc(x.title)}</h4>
-<div class="price">${esc(x.price)}</div>
-<div class="meta">📍 ${esc(x.city||'البوكمال')} · ${esc(x.category)}</div>
-${x.description?`<div class="meta">${esc(x.description)}</div>`:''}
-${phone?`<a class="contact" target="_blank" rel="noopener" href="https://wa.me/${phone}">تواصل مع البائع عبر واتساب</a>`:''}
-</div></article>`;
-}).join(''):'<div class="empty">ما لقينا إعلانات بهالقسم حالياً. كن أول من يضيف إعلاناً!</div>';
+function statusClass(s){
+ return s==='active'?'active':s==='hidden'?'hiddenstatus':s==='rejected'?'rejected':'';
+}
+function dateText(d){
+ try{return new Date(d).toLocaleDateString('ar-SY')}catch(e){return ''}
+}
+function phoneLink(phone){
+ let p=String(phone||'').replace(/[^\d+]/g,'');
+ if(p.startsWith('00'))p=p.slice(2);
+ return 'https://wa.me/'+p.replace(/\D/g,'');
+}
+function adCard(ad,admin=false){
+ const image=ad.image_url
+ ? `<img src="${esc(ad.image_url)}" alt="${esc(ad.title)}" loading="lazy">`
+ : `<div class="noimage">📦</div>`;
+ const status=admin?`<span class="status ${statusClass(ad.status)}">${statusName(ad.status)}</span>`:'';
+ let buttons='';
+ if(admin){
+  buttons=`<div class="actions">
+   ${ad.status!=='active'?'<button class="green" data-action="approve" data-id="'+esc(ad.id)+'">موافقة ونشر</button>':''}
+   ${ad.status!=='hidden'?'<button class="gray" data-action="hide" data-id="'+esc(ad.id)+'">إخفاء</button>':''}
+   ${ad.status!=='rejected'?'<button class="red" data-action="reject" data-id="'+esc(ad.id)+'">رفض</button>':''}
+   <button class="soft" data-action="edit" data-id="${esc(ad.id)}">تعديل</button>
+   <button class="red" data-action="delete" data-id="${esc(ad.id)}">حذف نهائي</button>
+  </div>`;
+ }else{
+  buttons=`<div class="actions"><a class="btn green" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="${phoneLink(ad.phone)}">تواصل واتساب</a></div>`;
+ }
+ return `<article class="card">
+  ${image}
+  <div class="cardbody">
+   <h3>${esc(ad.title)}</h3>
+   <div class="meta">${esc(ad.category||'')} · ${esc(ad.city||'البوكمال')} · ${dateText(ad.created_at)}</div>
+   <div class="price">${esc(ad.price||'السعر عند التواصل')}</div>
+   <p class="desc">${esc(ad.description||'')}</p>
+   ${admin?`<div style="margin:8px 0">${status}</div><div class="meta">هاتف المعلن: ${esc(ad.phone||'')}</div>`:''}
+   ${buttons}
+  </div>
+ </article>`;
 }
 
-async function loadAds(){
-const {data,error}=await db.from('ads')
-.select('id,title,category,description,price,phone,image_url,city,status,created_at')
-.eq('status','active').order('created_at',{ascending:false});
-if(error){
-document.getElementById('listings').innerHTML='<div class="empty">تعذر تحميل الإعلانات. حدّث الصفحة وحاول مرة ثانية.</div>';
-console.error(error);
-return;
-}
-ads=data||[];
-render();
+async function loadPublicAds(){
+ $('adsGrid').innerHTML='<div class="empty">جاري تحميل الإعلانات...</div>';
+ let q=sb.from('ads').select('*').eq('status','active').order('created_at',{ascending:false});
+ if(selectedCategory!=='الكل')q=q.eq('category',selectedCategory);
+ const term=$('search').value.trim();
+ if(term)q=q.or(`title.ilike.%${term}%,description.ilike.%${term}%,category.ilike.%${term}%`);
+ const {data,error}=await q;
+ if(error){
+  $('adsGrid').innerHTML='<div class="empty">تعذر تحميل الإعلانات حالياً.</div>';
+  console.error(error);return;
+ }
+ $('count').textContent=(data?.length||0)+' إعلان';
+ $('adsGrid').innerHTML=data?.length?data.map(a=>adCard(a)).join(''):'<div class="empty">ماكو إعلانات منشورة بهذا القسم حالياً.</div>';
 }
 
-function openForm(){document.getElementById('modal').classList.add('open');}
-function closeForm(){document.getElementById('modal').classList.remove('open');}
+async function checkAdmin(){
+ if(!currentUser)return false;
+ const {data,error}=await sb.rpc('is_admin');
+ if(error){console.error('Admin check:',error);return false;}
+ return data===true;
+}
+
+async function loadAdminAds(){
+ if(!isAdmin)return;
+ $('adminGrid').innerHTML='<div class="empty">جاري تحميل الإعلانات...</div>';
+ const {data,error}=await sb.from('ads').select('*').order('created_at',{ascending:false});
+ if(error){
+  $('adminGrid').innerHTML='<div class="empty">تعذر تحميل لوحة الإدارة. تحقق من صلاحيات المدير.</div>';
+  console.error(error);return;
+ }
+ allAdminAds=data||[];
+ const filtered=adminFilter==='all'?allAdminAds:allAdminAds.filter(a=>a.status===adminFilter);
+ $('adminGrid').innerHTML=filtered.length?filtered.map(a=>adCard(a,true)).join():'<div class="empty">لا توجد إعلانات في هذا القسم.</div>';
+}
+
+async function refreshAuth(){
+ const {data}=await sb.auth.getSession();
+ currentUser=data.session?.user||null;
+ isAdmin=await checkAdmin();
+ $('loginTop').classList.toggle('hidden',!!currentUser);
+ $('accountTop').classList.toggle('hidden',!currentUser);
+ $('accountBox').classList.toggle('hidden',!currentUser);
+ $('adminBox').classList.toggle('hidden',!isAdmin);
+ $('accountEmail').textContent=currentUser?currentUser.email:'';
+ $('adminNotice').classList.toggle('hidden',!isAdmin);
+ $('authBox').classList.add('hidden');
+ $('adFormBox').classList.add('hidden');
+ await loadPublicAds();
+ if(isAdmin)await loadAdminAds();
+}
+
+function openAuth(){
+ clearMessage();
+ $('authBox').classList.remove('hidden');
+ $('adFormBox').classList.add('hidden');
+ $('accountBox').classList.add('hidden');
+ $('authBox').scrollIntoView({behavior:'smooth'});
+}
+function setAuthMode(mode){
+ authMode=mode;
+ $('authTitle').textContent=mode==='login'?'تسجيل الدخول':'إنشاء حساب جديد';
+ $('authSubmit').textContent=mode==='login'?'دخول':'إنشاء الحساب';
+ $('authHint').innerHTML=mode==='login'
+ ? 'ما عندك حساب؟ <a href="#" id="toggleAuth">إنشاء حساب جديد</a>'
+ : 'عندك حساب؟ <a href="#" id="toggleAuth">تسجيل الدخول</a>';
+ $('password').autocomplete=mode==='login'?'current-password':'new-password';
+}
+function openAdForm(){
+ clearMessage();
+ if(!currentUser){message('حتى تنشر إعلان، سجّل الدخول أو أنشئ حساباً أولاً.','err');openAuth();return;}
+ $('adFormBox').classList.remove('hidden');
+ $('adFormBox').scrollIntoView({behavior:'smooth'});
+}
+
+$('addTop').addEventListener('click',openAdForm);
+$('loginTop').addEventListener('click',openAuth);
+$('accountTop').addEventListener('click',()=>{$('accountBox').classList.toggle('hidden');$('accountBox').scrollIntoView({behavior:'smooth'});});
+$('closeAuth').addEventListener('click',()=>$('authBox').classList.add('hidden'));
+$('closeAdForm').addEventListener('click',()=>$('adFormBox').classList.add('hidden'));
+$('toggleAuth').addEventListener('click',e=>{e.preventDefault();setAuthMode(authMode==='login'?'signup':'login');});
+$('authHint').addEventListener('click',e=>{
+ if(e.target.id==='toggleAuth'){e.preventDefault();setAuthMode(authMode==='login'?'signup':'login');}
+});
+
+$('authForm').addEventListener('submit',async e=>{
+ e.preventDefault();clearMessage();
+ const email=$('email').value.trim();
+ const password=$('password').value;
+ $('authSubmit').disabled=true;
+ try{
+  if(authMode==='signup'){
+   const {data,error}=await sb.auth.signUp({email,password});
+   if(error)throw error;
+   if(data.session){
+    message('تم إنشاء الحساب وتسجيل الدخول بنجاح.');
+    await refreshAuth();
+   }else{
+    message('تم إرسال رسالة تأكيد إلى بريدك الإلكتروني. افتح الرسالة وأكّد حسابك ثم ارجع لتسجيل الدخول.');
+   }
+  }else{
+   const {error}=await sb.auth.signInWithPassword({email,password});
+   if(error)throw error;
+   message('تم تسجيل الدخول بنجاح.');
+   await refreshAuth();
+  }
+ }catch(err){message(err.message||'حدث خطأ أثناء تسجيل الدخول.','err');}
+ finally{$('authSubmit').disabled=false;}
+});
+
+$('logoutBtn').addEventListener('click',async()=>{
+ await sb.auth.signOut();
+ isAdmin=false;currentUser=null;
+ message('تم تسجيل الخروج.');
+ await refreshAuth();
+});
 
 async function uploadImage(file){
-if(!file)return null;
-const allowed=['image/jpeg','image/png','image/webp'];
-if(!allowed.includes(file.type))throw new Error('اختر صورة JPG أو PNG أو WebP فقط.');
-if(file.size>5*1024*1024)throw new Error('حجم الصورة أكبر من 5 ميغابايت. اختر صورة أصغر.');
-
-const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
-const path=Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;
-
-const {error}=await db.storage.from(BUCKET).upload(path,file,{
-cacheControl:'3600',
-upsert:false,
-contentType:file.type
-});
-if(error)throw new Error('تعذر رفع الصورة: '+error.message);
-
-const {data}=db.storage.from(BUCKET).getPublicUrl(path);
-return data.publicUrl;
+ if(!file)return null;
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('نوع الصورة غير مدعوم.');
+ if(file.size>5*1024*1024)throw new Error('حجم الصورة أكبر من 5 ميغابايت.');
+ const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
+ const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+ const {error}=await sb.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});
+ if(error)throw error;
+ const {data}=sb.storage.from(BUCKET).getPublicUrl(path);
+ return data.publicUrl;
 }
 
-document.getElementById('form').addEventListener('submit',async e=>{
-e.preventDefault();
-const form=e.target;
-const button=form.querySelector('.submit');
-const file=document.getElementById('imageFile').files[0];
-
-button.disabled=true;
-button.textContent='جاري النشر...';
-
-try{
-const phone=document.getElementById('phone').value.trim().replace(/[^0-9]/g,'');
-if(phone.length<7||phone.length>20)throw new Error('تأكد من رقم واتساب مع رمز البلد.');
-
-const imageUrl=await uploadImage(file);
-
-const item={
-title:document.getElementById('name').value.trim(),
-category:document.getElementById('category').value,
-price:document.getElementById('price').value.trim(),
-description:document.getElementById('description').value.trim()||null,
-image_url:imageUrl,
-phone:phone,
-city:'البوكمال',
-status:'active'
-};
-
-const {error}=await db.from('ads').insert(item);
-if(error)throw new Error('ما قدرنا نحفظ الإعلان: '+error.message);
-
-form.reset();
-closeForm();
-await loadAds();
-alert('تم نشر إعلانك بنجاح.');
-}catch(error){
-alert(error.message||'حدث خطأ غير متوقع.');
-console.error(error);
-}finally{
-button.disabled=false;
-button.textContent='حفظ الإعلان';
-}
+$('adForm').addEventListener('submit',async e=>{
+ e.preventDefault();clearMessage();
+ if(!currentUser){message('سجّل الدخول أولاً.','err');openAuth();return;}
+ const btn=$('submitAd');
+ btn.disabled=true;btn.textContent='جاري إرسال الإعلان...';
+ try{
+  const file=$('imageFile').files[0];
+  const image_url=await uploadImage(file);
+  const payload={
+   title:$('title').value.trim(),
+   category:$('category').value,
+   description:$('description').value.trim(),
+   price:$('price').value.trim(),
+   phone:$('phone').value.trim(),
+   image_url,
+   city:'البوكمال',
+   status:'pending',
+   user_id:currentUser.id
+  };
+  const {error}=await sb.from('ads').insert(payload);
+  if(error)throw error;
+  $('adForm').reset();
+  $('adFormBox').classList.add('hidden');
+  message('وصل إعلانك بنجاح، وهو الآن قيد المراجعة بانتظار موافقة المدير.');
+  if(isAdmin)await loadAdminAds();
+ }catch(err){message(err.message||'تعذر إرسال الإعلان. حاول مرة ثانية.','err');}
+ finally{btn.disabled=false;btn.textContent='إرسال الإعلان للمراجعة';}
 });
 
-document.getElementById('year').textContent=new Date().getFullYear();
-loadAds();
-</script>
-</body>
-</html>
+$('filters').addEventListener('click',async e=>{
+ const b=e.target.closest('[data-category]');
+ if(!b)return;
+ selectedCategory=b.dataset.category;
+ document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===b));
+ await loadPublicAds();
+});
+$('searchBtn').addEventListener('click',loadPublicAds);
+$('search').addEventListener('keydown',e=>{if(e.key==='Enter')loadPublicAds();});
+
+document.querySelectorAll('[data-admin-filter]').forEach(b=>{
+ b.addEventListener('click',async()=>{
+  adminFilter=b.dataset.adminFilter;
+  document.querySelectorAll('[data-admin-filter]').forEach(x=>x.classList.toggle('active',x===b));
+  await loadAdminAds();
+ });
+});
+
+$('adminGrid').addEventListener('click',async e=>{
+ const b=e.target.closest('[data-action]');
+ if(!b)return;
+ const id=b.dataset.id;
+ const action=b.dataset.action;
+ const ad=allAdminAds.find(x=>String(x.id)===String(id));
+ if(!ad)return;
+ try{
+  if(action==='delete'){
+   if(!confirm('هل أنت متأكد من حذف الإعلان نهائياً؟'))return;
+   const {error}=await sb.from('ads').delete().eq('id',id);
+   if(error)throw error;
+   message('تم حذف الإعلان نهائياً.');
+  }
+  if(action==='approve'||action==='hide'||action==='reject'){
+   const status=action==='approve'?'active':action==='hide'?'hidden':'rejected';
+   const {error}=await sb.from('ads').update({status}).eq('id',id);
+   if(error)throw error;
+   message('تم تحديث حالة الإعلان: '+statusN
