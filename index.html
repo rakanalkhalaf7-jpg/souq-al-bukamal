@@ -599,7 +599,35 @@ $('authHint').addEventListener('click',e=>{
   setAuthMode(authMode==='login'?'signup':'login');
  }
 });
+$('forgotPasswordLink').addEventListener('click',async e=>{
+ e.preventDefault();
+ clearMessage();
 
+ const email=$('email').value.trim();
+
+ if(!email){
+  message('اكتب بريدك الإلكتروني أولاً ثم اضغط نسيت كلمة المرور.','err');
+  $('email').focus();
+  return;
+ }
+
+ const link=$('forgotPasswordLink');
+ link.style.pointerEvents='none';
+
+ try{
+  const {error}=await sb.auth.resetPasswordForEmail(email,{
+   redirectTo:'https://souq-al-bukamal.pages.dev/?mode=recovery'
+  });
+
+  if(error)throw error;
+
+  message('إذا كان البريد مسجلاً، أرسلنا إليه رابط استعادة كلمة المرور. افحص البريد الوارد والرسائل غير المرغوب فيها.');
+ }catch(err){
+  message(err.message||'تعذر إرسال رابط الاستعادة.','err');
+ }finally{
+  link.style.pointerEvents='';
+ }
+});
 $('authForm').addEventListener('submit',async e=>{
  e.preventDefault();
  clearMessage();
