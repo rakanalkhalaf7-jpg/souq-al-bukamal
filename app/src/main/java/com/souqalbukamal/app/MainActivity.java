@@ -1,5 +1,5 @@
 
-package com.souqalbukamal.app;
+package com.souq.albukamal;
 
 import android.app.Activity;
 import android.os.Bundle;
