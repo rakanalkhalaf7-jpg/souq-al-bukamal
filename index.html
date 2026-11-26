@@ -510,6 +510,8 @@ function setAuthMode(mode){
   ?'ما عندك حساب؟ <a href="#" id="toggleAuth">إنشاء حساب جديد</a>'
   :'عندك حساب؟ <a href="#" id="toggleAuth">تسجيل الدخول</a>';
  $('password').autocomplete=mode==='login'?'current-password':'new-password';
+
+ $('forgotPasswordRow').classList.toggle('hidden',mode!=='login');
 }
 
 function openAdForm(){
