@@ -426,10 +426,29 @@ $('adminGrid').addEventListener('click',async e=>{
    if(!confirm('هل أنت متأكد من حذف الإعلان نهائياً؟'))return;
    const {error}=await sb.from('ads').delete().eq('id',id);
    if(error)throw error;
-   message('تم حذف الإعلان نهائياً.');
+   
+message('تم تحديث حالة الإعلان: '+statusName(status));
   }
-  if(action==='approve'||action==='hide'||action==='reject'){
-   const status=action==='approve'?'active':action==='hide'?'hidden':'rejected';
-   const {error}=await sb.from('ads').update({status}).eq('id',id);
-   if(error)throw error;
-   message('تم تحديث حالة الإعلان: '+statusN
+  await loadAdminAds();
+  await loadPublicAds();
+ }catch(err){
+  message(err.message||'حدث خطأ أثناء تنفيذ العملية.','err');
+ }
+});
+
+async function init(){
+ try{
+  await refreshAuth();
+  sb.auth.onAuthStateChange(async()=>{
+   await refreshAuth();
+  });
+ }catch(err){
+  console.error('Initialization error:',err);
+  message('حدث خطأ أثناء تشغيل الموقع. يرجى تحديث الصفحة.','err');
+ }
+}
+
+init();
+</script>
+</body>
+</html>
