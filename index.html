@@ -904,8 +904,18 @@ async function init(){
 
   await refreshAuth(data.session);
 
+  if(new URLSearchParams(location.search).get('mode')==='recovery'){
+   showPasswordReset();
+  }
+
   sb.auth.onAuthStateChange((event,session)=>{
    if(event==='INITIAL_SESSION')return;
+
+   if(event==='PASSWORD_RECOVERY'){
+    showPasswordReset();
+    return;
+   }
+
    Promise.resolve().then(()=>refreshAuth(session));
   });
 
