@@ -19,6 +19,7 @@ header{background:linear-gradient(130deg,#133d2b,#23724b);color:white;padding:22
 .brand h1{font-size:20px;margin:0}
 .brand small{display:block;color:#c9e2d2;margin-top:4px}
 button{cursor:pointer;font:inherit;border:0}
+button:disabled{opacity:.55;cursor:not-allowed}
 .btn{padding:11px 15px;border-radius:11px;font-weight:bold}
 .white{background:white;color:var(--g)}
 .green{background:var(--g);color:white}
@@ -38,7 +39,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--g2)}
 .sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 0 14px}
 .sectionhead h2{font-size:19px;margin:0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-.card{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden}
+.card{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden;min-width:0}
 .card img{width:100%;height:175px;object-fit:cover;background:#edf1ed}
 .noimage{height:130px;display:grid;place-items:center;background:#edf2ed;font-size:42px}
 .cardbody{padding:13px}
@@ -47,7 +48,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--g2)}
 .meta{font-size:12px;color:var(--muted);line-height:1.8}
 .desc{font-size:13px;line-height:1.7;color:#4e5a52;margin:8px 0;white-space:pre-wrap}
 .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.actions button{padding:8px 10px;border-radius:9px;font-size:12px}
+.actions button,.actions a{padding:8px 10px;border-radius:9px;font-size:12px}
 .panel,.formbox,.authbox{background:white;border:1px solid var(--line);border-radius:16px;padding:17px;margin:15px 0}
 .hidden{display:none!important}
 .field{margin:12px 0}
@@ -65,7 +66,16 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 12px}
 #message{padding:11px;border-radius:10px;margin:12px 0;font-size:13px;display:none;line-height:1.7}
 #message.ok{display:block;background:#e5f5e9;color:#17653a}
 #message.err{display:block;background:#fee9e7;color:#a32d25}
-@media(max-width:520px){.searchbox{flex-direction:column}.hero h2{font-size:21px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card img{height:130px}.cardbody{padding:10px}.actions button{font-size:11px}}
+#submitAd{min-width:170px}
+@media(max-width:520px){
+ .searchbox{flex-direction:column}
+ .hero h2{font-size:21px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .card img{height:130px}
+ .cardbody{padding:10px}
+ .actions button,.actions a{font-size:11px}
+ .btn{padding:10px 12px}
+}
 </style>
 </head>
 <body>
@@ -94,38 +104,101 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 12px}
  <div id="message"></div>
 
  <section id="authBox" class="authbox hidden">
-  <div class="sectionhead"><h2 id="authTitle">تسجيل الدخول</h2><button class="btn gray" id="closeAuth">إغلاق</button></div>
+  <div class="sectionhead">
+   <h2 id="authTitle">تسجيل الدخول</h2>
+   <button class="btn gray" id="closeAuth">إغلاق</button>
+  </div>
   <p class="note">سجّل بالبريد الإلكتروني حتى تقدر تنشر إعلانك.</p>
   <form id="authForm">
-   <div class="field"><label>البريد الإلكتروني</label><input id="email" type="email" required autocomplete="email" placeholder="name@example.com"></div>
-   <div class="field"><label>كلمة المرور</label><input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="ستة أحرف على الأقل"></div>
+   <div class="field">
+    <label>البريد الإلكتروني</label>
+    <input id="email" type="email" required autocomplete="email" placeholder="name@example.com">
+   </div>
+   <div class="field">
+    <label>كلمة المرور</label>
+    <input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="ستة أحرف على الأقل">
+   </div>
    <button class="btn green" id="authSubmit" type="submit">دخول</button>
   </form>
   <p class="note" id="authHint">ما عندك حساب؟ <a href="#" id="toggleAuth">إنشاء حساب جديد</a></p>
  </section>
 
  <section id="accountBox" class="panel hidden">
-  <div class="sectionhead"><h2>حسابك</h2><button class="btn gray" id="logoutBtn">تسجيل الخروج</button></div>
+  <div class="sectionhead">
+   <h2>حسابك</h2>
+   <button class="btn gray" id="logoutBtn">تسجيل الخروج</button>
+  </div>
   <p id="accountEmail" class="note"></p>
+  <div class="actions">
+   <button class="btn green" id="myAdsBtn">إعلاناتي</button>
+  </div>
   <p id="adminNotice" class="note hidden">أنت مسجل بصلاحية مدير سوق البوكمال.</p>
  </section>
 
+ <section id="myAdsBox" class="panel hidden">
+  <div class="sectionhead">
+   <h2>إعلاناتي</h2>
+   <button class="btn gray" id="closeMyAds">إغلاق</button>
+  </div>
+  <p class="note">هنا تظهر إعلاناتك المنشورة والإعلانات التي تنتظر المراجعة والمرفوضة.</p>
+  <div class="tabs" id="myAdsTabs">
+   <button class="active" data-my-filter="all">الكل</button>
+   <button data-my-filter="pending">قيد المراجعة</button>
+   <button data-my-filter="active">المنشورة</button>
+   <button data-my-filter="rejected">المرفوضة</button>
+   <button data-my-filter="hidden">المخفية</button>
+  </div>
+  <div id="myAdsGrid" class="grid">
+   <div class="empty">جاري تحميل إعلاناتك...</div>
+  </div>
+ </section>
+
  <section id="adFormBox" class="formbox hidden">
-  <div class="sectionhead"><h2>إضافة إعلان جديد</h2><button class="btn gray" id="closeAdForm">إغلاق</button></div>
+  <div class="sectionhead">
+   <h2 id="adFormTitle">إضافة إعلان جديد</h2>
+   <button class="btn gray" id="closeAdForm">إغلاق</button>
+  </div>
   <form id="adForm">
-   <div class="field"><label>عنوان الإعلان</label><input id="title" required minlength="2" maxlength="100" placeholder="مثلاً: موبايل سامسونغ للبيع"></div>
-   <div class="field"><label>القسم</label>
+   <div class="field">
+    <label>عنوان الإعلان</label>
+    <input id="title" required minlength="2" maxlength="100" placeholder="مثلاً: موبايل سامسونغ للبيع">
+   </div>
+   <div class="field">
+    <label>القسم</label>
     <select id="category" required>
      <option value="">اختر القسم</option>
-     <option>موبايلات</option><option>كمبيوتر ولابتوب</option><option>بلايستيشن وألعاب</option><option>سيارات ودراجات</option><option>أثاث منزلي</option><option>أجهزة كهربائية</option><option>عقارات</option><option>ملابس</option><option>مستلزمات أخرى</option>
+     <option>موبايلات</option>
+     <option>كمبيوتر ولابتوب</option>
+     <option>بلايستيشن وألعاب</option>
+     <option>سيارات ودراجات</option>
+     <option>أثاث منزلي</option>
+     <option>أجهزة كهربائية</option>
+     <option>عقارات</option>
+     <option>ملابس</option>
+     <option>مستلزمات أخرى</option>
     </select>
    </div>
-   <div class="field"><label>السعر (اختياري)</label><input id="price" placeholder="مثلاً: 150 دولار أو قابل للتفاوض"></div>
-   <div class="field"><label>رقم الهاتف أو واتساب</label><input id="phone" required minlength="7" maxlength="20" placeholder="09xxxxxxxx"></div>
-   <div class="field"><label>وصف السلعة</label><textarea id="description" rows="4" placeholder="اكتب تفاصيل السلعة وحالتها..."></textarea></div>
-   <div class="field"><label>صورة السلعة (اختياري)</label><input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp"><p class="note">JPG أو PNG أو WebP، الحد الأقصى 5 ميغابايت.</p></div>
+   <div class="field">
+    <label>السعر (اختياري)</label>
+    <input id="price" placeholder="مثلاً: 150 دولار أو قابل للتفاوض">
+   </div>
+   <div class="field">
+    <label>رقم الهاتف أو واتساب</label>
+    <input id="phone" required minlength="7" maxlength="20" placeholder="09xxxxxxxx">
+   </div>
+   <div class="field">
+    <label>وصف السلعة</label>
+    <textarea id="description" rows="4" placeholder="اكتب تفاصيل السلعة وحالتها..."></textarea>
+   </div>
+   <div class="field">
+    <label>صورة السلعة (اختياري)</label>
+    <input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp">
+    <p class="note">JPG أو PNG أو WebP، الحد الأقصى 5 ميغابايت.</p>
+    <p class="note" id="imageHint"></p>
+   </div>
    <button class="btn green" id="submitAd" type="submit">إرسال الإعلان للمراجعة</button>
-   <p class="note">لن يظهر إعلانك للزوار حتى يراجعه المدير ويوافق عليه.</p>
+   <button class="btn gray hidden" id="cancelEdit" type="button">إلغاء التعديل</button>
+   <p class="note" id="formNote">لن يظهر إعلانك للزوار حتى يراجعه المدير ويوافق عليه.</p>
   </form>
  </section>
 
@@ -133,6 +206,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 12px}
   <input id="search" placeholder="ابحث عن موبايل، سيارة، كمبيوتر...">
   <button class="btn green" id="searchBtn">بحث</button>
  </div>
+
  <div class="filters" id="filters">
   <button class="chip active" data-category="الكل">الكل</button>
   <button class="chip" data-category="موبايلات">موبايلات</button>
@@ -146,21 +220,31 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 12px}
  </div>
 
  <section>
-  <div class="sectionhead"><h2>أحدث الإعلانات</h2><span class="note" id="count"></span></div>
-  <div id="adsGrid" class="grid"><div class="empty">جاري تحميل الإعلانات...</div></div>
+  <div class="sectionhead">
+   <h2>أحدث الإعلانات</h2>
+   <span class="note" id="count"></span>
+  </div>
+  <div id="adsGrid" class="grid">
+   <div class="empty">جاري تحميل الإعلانات...</div>
+  </div>
  </section>
 
  <section id="adminBox" class="panel hidden">
-  <div class="sectionhead"><h2>🛡️ لوحة إدارة سوق البوكمال</h2><span class="status active">مدير</span></div>
+  <div class="sectionhead">
+   <h2>🛡️ لوحة إدارة سوق البوكمال</h2>
+   <span class="status active">مدير</span>
+  </div>
   <p class="note">الإعلانات الجديدة لا تظهر للزوار إلا بعد موافقتك.</p>
-  <div class="tabs">
+  <div class="tabs" id="adminTabs">
    <button class="active" data-admin-filter="pending">بانتظار المراجعة</button>
    <button data-admin-filter="all">كل الإعلانات</button>
    <button data-admin-filter="active">المنشورة</button>
    <button data-admin-filter="hidden">المخفية</button>
    <button data-admin-filter="rejected">المرفوضة</button>
   </div>
-  <div id="adminGrid" class="grid"><div class="empty">جاري تحميل لوحة الإدارة...</div></div>
+  <div id="adminGrid" class="grid">
+   <div class="empty">جاري تحميل لوحة الإدارة...</div>
+  </div>
  </section>
 </main>
 
@@ -170,14 +254,23 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 12px}
 const SUPABASE_URL = 'https://mrkinvslilxfzurzftxd.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_hKQ1Nuyg2Ukkq5vAlF9isw_RC5zg06d';
 const BUCKET = 'marketplace-images';
+
+if (!window.supabase) {
+ alert('تعذر تحميل خدمة الموقع. تحقق من اتصال الإنترنت ثم حدّث الصفحة.');
+ throw new Error('Supabase library did not load');
+}
+
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 let isAdmin = false;
 let allAdminAds = [];
+let myAds = [];
 let selectedCategory = 'الكل';
 let adminFilter = 'pending';
+let myFilter = 'all';
 let authMode = 'login';
+let editingAd = null;
 
 const $ = id => document.getElementById(id);
 
@@ -193,13 +286,22 @@ function clearMessage(){
  $('message').textContent='';
 }
 function esc(value){
- return String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ return String(value ?? '').replace(/[&<>"']/g,c=>({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+ }[c]));
 }
 function statusName(s){
- return ({pending:'قيد المراجعة',active:'منشور',hidden:'مخفي',rejected:'مرفوض'})[s]||s;
+ return ({
+  pending:'قيد المراجعة',
+  active:'منشور',
+  hidden:'مخفي',
+  rejected:'مرفوض'
+ })[s]||s;
 }
 function statusClass(s){
- return s==='active'?'active':s==='hidden'?'hiddenstatus':s==='rejected'?'rejected':'';
+ return s==='active'?'active':
+  s==='hidden'?'hiddenstatus':
+  s==='rejected'?'rejected':'';
 }
 function dateText(d){
  try{return new Date(d).toLocaleDateString('ar-SY')}catch(e){return ''}
@@ -209,23 +311,37 @@ function phoneLink(phone){
  if(p.startsWith('00'))p=p.slice(2);
  return 'https://wa.me/'+p.replace(/\D/g,'');
 }
-function adCard(ad,admin=false){
+
+function adCard(ad,mode='public'){
  const image=ad.image_url
- ? `<img src="${esc(ad.image_url)}" alt="${esc(ad.title)}" loading="lazy">`
- : `<div class="noimage">📦</div>`;
- const status=admin?`<span class="status ${statusClass(ad.status)}">${statusName(ad.status)}</span>`:'';
+  ? `<img src="${esc(ad.image_url)}" alt="${esc(ad.title)}" loading="lazy">`
+  : `<div class="noimage">📦</div>`;
+
+ const status=mode!=='public'
+  ? `<span class="status ${statusClass(ad.status)}">${statusName(ad.status)}</span>`
+  :'';
+
  let buttons='';
- if(admin){
+
+ if(mode==='admin'){
   buttons=`<div class="actions">
-   ${ad.status!=='active'?'<button class="green" data-action="approve" data-id="'+esc(ad.id)+'">موافقة ونشر</button>':''}
-   ${ad.status!=='hidden'?'<button class="gray" data-action="hide" data-id="'+esc(ad.id)+'">إخفاء</button>':''}
-   ${ad.status!=='rejected'?'<button class="red" data-action="reject" data-id="'+esc(ad.id)+'">رفض</button>':''}
-   <button class="soft" data-action="edit" data-id="${esc(ad.id)}">تعديل</button>
-   <button class="red" data-action="delete" data-id="${esc(ad.id)}">حذف نهائي</button>
+   ${ad.status!=='active'?`<button class="green" data-action="approve" data-id="${esc(ad.id)}">موافقة ونشر</button>`:''}
+   ${ad.status!=='hidden'?`<button class="gray" data-action="hide" data-id="${esc(ad.id)}">إخفاء</button>`:''}
+   ${ad.status!=='rejected'?`<button class="red" data-action="reject" data-id="${esc(ad.id)}">رفض</button>`:''}
+   <button class="soft" data-action="admin-edit" data-id="${esc(ad.id)}">تعديل</button>
+   <button class="red" data-action="admin-delete" data-id="${esc(ad.id)}">حذف نهائي</button>
+  </div>`;
+ }else if(mode==='mine'){
+  buttons=`<div class="actions">
+   <button class="soft" data-action="my-edit" data-id="${esc(ad.id)}">تعديل إعلاني</button>
+   <button class="red" data-action="my-delete" data-id="${esc(ad.id)}">حذف إعلاني</button>
   </div>`;
  }else{
-  buttons=`<div class="actions"><a class="btn green" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="${phoneLink(ad.phone)}">تواصل واتساب</a></div>`;
+  buttons=`<div class="actions">
+   <a class="btn green" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="${phoneLink(ad.phone)}">تواصل واتساب</a>
+  </div>`;
  }
+
  return `<article class="card">
   ${image}
   <div class="cardbody">
@@ -233,7 +349,7 @@ function adCard(ad,admin=false){
    <div class="meta">${esc(ad.category||'')} · ${esc(ad.city||'البوكمال')} · ${dateText(ad.created_at)}</div>
    <div class="price">${esc(ad.price||'السعر عند التواصل')}</div>
    <p class="desc">${esc(ad.description||'')}</p>
-   ${admin?`<div style="margin:8px 0">${status}</div><div class="meta">هاتف المعلن: ${esc(ad.phone||'')}</div>`:''}
+   ${mode!=='public'?`<div style="margin:8px 0">${status}</div><div class="meta">هاتف المعلن: ${esc(ad.phone||'')}</div>`:''}
    ${buttons}
   </div>
  </article>`;
@@ -241,53 +357,120 @@ function adCard(ad,admin=false){
 
 async function loadPublicAds(){
  $('adsGrid').innerHTML='<div class="empty">جاري تحميل الإعلانات...</div>';
- let q=sb.from('ads').select('*').eq('status','active').order('created_at',{ascending:false});
+
+ let q=sb.from('ads').select('*')
+  .eq('status','active')
+  .order('created_at',{ascending:false});
+
  if(selectedCategory!=='الكل')q=q.eq('category',selectedCategory);
+
  const term=$('search').value.trim();
  if(term)q=q.or(`title.ilike.%${term}%,description.ilike.%${term}%,category.ilike.%${term}%`);
+
  const {data,error}=await q;
+
  if(error){
   $('adsGrid').innerHTML='<div class="empty">تعذر تحميل الإعلانات حالياً.</div>';
-  console.error(error);return;
+  console.error(error);
+  return;
  }
+
  $('count').textContent=(data?.length||0)+' إعلان';
- $('adsGrid').innerHTML=data?.length?data.map(a=>adCard(a)).join(''):'<div class="empty">ماكو إعلانات منشورة بهذا القسم حالياً.</div>';
+ $('adsGrid').innerHTML=data?.length
+  ?data.map(a=>adCard(a,'public')).join('')
+  :'<div class="empty">ماكو إعلانات منشورة بهذا القسم حالياً.</div>';
 }
 
 async function checkAdmin(){
  if(!currentUser)return false;
  const {data,error}=await sb.rpc('is_admin');
- if(error){console.error('Admin check:',error);return false;}
+ if(error){
+  console.error('Admin check:',error);
+  return false;
+ }
  return data===true;
 }
 
 async function loadAdminAds(){
  if(!isAdmin)return;
+
  $('adminGrid').innerHTML='<div class="empty">جاري تحميل الإعلانات...</div>';
- const {data,error}=await sb.from('ads').select('*').order('created_at',{ascending:false});
+
+ const {data,error}=await sb.from('ads')
+  .select('*')
+  .order('created_at',{ascending:false});
+
  if(error){
   $('adminGrid').innerHTML='<div class="empty">تعذر تحميل لوحة الإدارة. تحقق من صلاحيات المدير.</div>';
-  console.error(error);return;
+  console.error(error);
+  return;
  }
+
  allAdminAds=data||[];
- const filtered=adminFilter==='all'?allAdminAds:allAdminAds.filter(a=>a.status===adminFilter);
- $('adminGrid').innerHTML=filtered.length?filtered.map(a=>adCard(a,true)).join():'<div class="empty">لا توجد إعلانات في هذا القسم.</div>';
+
+ const filtered=adminFilter==='all'
+  ?allAdminAds
+  :allAdminAds.filter(a=>a.status===adminFilter);
+
+ $('adminGrid').innerHTML=filtered.length
+  ?filtered.map(a=>adCard(a,'admin')).join('')
+  :'<div class="empty">لا توجد إعلانات في هذا القسم.</div>';
 }
 
-async function refreshAuth(){
- const {data}=await sb.auth.getSession();
- currentUser=data.session?.user||null;
+async function loadMyAds(){
+ if(!currentUser)return;
+
+ $('myAdsGrid').innerHTML='<div class="empty">جاري تحميل إعلاناتك...</div>';
+
+ const {data,error}=await sb.from('ads')
+  .select('*')
+  .eq('user_id',currentUser.id)
+  .order('created_at',{ascending:false});
+
+ if(error){
+  $('myAdsGrid').innerHTML='<div class="empty">تعذر تحميل إعلاناتك حالياً.</div>';
+  console.error(error);
+  return;
+ }
+
+ myAds=data||[];
+
+ const filtered=myFilter==='all'
+  ?myAds
+  :myAds.filter(a=>a.status===myFilter);
+
+ $('myAdsGrid').innerHTML=filtered.length
+  ?filtered.map(a=>adCard(a,'mine')).join('')
+  :'<div class="empty">ما عندك إعلانات بهذا القسم حالياً.</div>';
+}
+
+async function refreshAuth(session){
+ currentUser=session?.user||null;
  isAdmin=await checkAdmin();
+
  $('loginTop').classList.toggle('hidden',!!currentUser);
  $('accountTop').classList.toggle('hidden',!currentUser);
  $('accountBox').classList.toggle('hidden',!currentUser);
  $('adminBox').classList.toggle('hidden',!isAdmin);
  $('accountEmail').textContent=currentUser?currentUser.email:'';
  $('adminNotice').classList.toggle('hidden',!isAdmin);
- $('authBox').classList.add('hidden');
- $('adFormBox').classList.add('hidden');
+
+ if(!currentUser){
+  $('myAdsBox').classList.add('hidden');
+  $('accountBox').classList.add('hidden');
+  $('adFormBox').classList.add('hidden');
+  $('authBox').classList.add('hidden');
+  $('adminBox').classList.add('hidden');
+  myAds=[];
+  allAdminAds=[];
+ }
+
  await loadPublicAds();
- if(isAdmin)await loadAdminAds();
+
+ if(currentUser){
+  await loadMyAds();
+  if(isAdmin)await loadAdminAds();
+ }
 }
 
 function openAuth(){
@@ -297,84 +480,194 @@ function openAuth(){
  $('accountBox').classList.add('hidden');
  $('authBox').scrollIntoView({behavior:'smooth'});
 }
+
 function setAuthMode(mode){
  authMode=mode;
  $('authTitle').textContent=mode==='login'?'تسجيل الدخول':'إنشاء حساب جديد';
  $('authSubmit').textContent=mode==='login'?'دخول':'إنشاء الحساب';
  $('authHint').innerHTML=mode==='login'
- ? 'ما عندك حساب؟ <a href="#" id="toggleAuth">إنشاء حساب جديد</a>'
- : 'عندك حساب؟ <a href="#" id="toggleAuth">تسجيل الدخول</a>';
+  ?'ما عندك حساب؟ <a href="#" id="toggleAuth">إنشاء حساب جديد</a>'
+  :'عندك حساب؟ <a href="#" id="toggleAuth">تسجيل الدخول</a>';
  $('password').autocomplete=mode==='login'?'current-password':'new-password';
 }
+
 function openAdForm(){
  clearMessage();
- if(!currentUser){message('حتى تنشر إعلان، سجّل الدخول أو أنشئ حساباً أولاً.','err');openAuth();return;}
+
+ if(!currentUser){
+  message('حتى تنشر إعلان، سجّل الدخول أو أنشئ حساباً أولاً.','err');
+  openAuth();
+  return;
+ }
+
+ resetAdForm();
  $('adFormBox').classList.remove('hidden');
  $('adFormBox').scrollIntoView({behavior:'smooth'});
 }
 
+function resetAdForm(){
+ editingAd=null;
+ $('adForm').reset();
+ $('adFormTitle').textContent='إضافة إعلان جديد';
+ $('submitAd').textContent='إرسال الإعلان للمراجعة';
+ $('cancelEdit').classList.add('hidden');
+ $('imageHint').textContent='';
+ $('formNote').textContent='لن يظهر إعلانك للزوار حتى يراجعه المدير ويوافق عليه.';
+}
+
+function startEdit(ad,asAdmin=false){
+ if(!currentUser)return;
+
+ editingAd={...ad,asAdmin};
+ $('title').value=ad.title||'';
+ $('category').value=ad.category||'';
+ $('price').value=ad.price||'';
+ $('phone').value=ad.phone||'';
+ $('description').value=ad.description||'';
+ $('imageFile').value='';
+ $('imageHint').textContent=ad.image_url?'توجد صورة حالية. إذا لم تختر صورة جديدة ستبقى الصورة الحالية.':'';
+ $('adFormTitle').textContent='تعديل الإعلان';
+ $('submitAd').textContent=asAdmin?'حفظ التعديلات':'حفظ التعديلات وإرسال للمراجعة';
+ $('cancelEdit').classList.remove('hidden');
+ $('formNote').textContent=asAdmin
+  ?'تعديل المدير يحافظ على حالة الإعلان الحالية.'
+  :'بعد تعديل إعلانك سيعود إلى قيد المراجعة حتى يوافق عليه المدير.';
+
+ $('myAdsBox').classList.add('hidden');
+ $('adminBox').classList.add('hidden');
+ $('adFormBox').classList.remove('hidden');
+ $('adFormBox').scrollIntoView({behavior:'smooth'});
+}
+
+function openMyAds(){
+ if(!currentUser){
+  openAuth();
+  return;
+ }
+ $('myAdsBox').classList.remove('hidden');
+ $('accountBox').classList.remove('hidden');
+ loadMyAds();
+ $('myAdsBox').scrollIntoView({behavior:'smooth'});
+}
+
 $('addTop').addEventListener('click',openAdForm);
 $('loginTop').addEventListener('click',openAuth);
-$('accountTop').addEventListener('click',()=>{$('accountBox').classList.toggle('hidden');$('accountBox').scrollIntoView({behavior:'smooth'});});
+
+$('accountTop').addEventListener('click',()=>{
+ $('accountBox').classList.toggle('hidden');
+ $('accountBox').scrollIntoView({behavior:'smooth'});
+});
+
 $('closeAuth').addEventListener('click',()=>$('authBox').classList.add('hidden'));
-$('closeAdForm').addEventListener('click',()=>$('adFormBox').classList.add('hidden'));
-$('toggleAuth').addEventListener('click',e=>{e.preventDefault();setAuthMode(authMode==='login'?'signup':'login');});
+$('closeAdForm').addEventListener('click',()=>{
+ $('adFormBox').classList.add('hidden');
+ resetAdForm();
+});
+$('cancelEdit').addEventListener('click',()=>{
+ $('adFormBox').classList.add('hidden');
+ resetAdForm();
+});
+$('closeMyAds').addEventListener('click',()=>$('myAdsBox').classList.add('hidden'));
+$('myAdsBtn').addEventListener('click',openMyAds);
+
 $('authHint').addEventListener('click',e=>{
- if(e.target.id==='toggleAuth'){e.preventDefault();setAuthMode(authMode==='login'?'signup':'login');}
+ if(e.target.id==='toggleAuth'){
+  e.preventDefault();
+  setAuthMode(authMode==='login'?'signup':'login');
+ }
 });
 
 $('authForm').addEventListener('submit',async e=>{
- e.preventDefault();clearMessage();
+ e.preventDefault();
+ clearMessage();
+
  const email=$('email').value.trim();
  const password=$('password').value;
+
  $('authSubmit').disabled=true;
+
  try{
   if(authMode==='signup'){
    const {data,error}=await sb.auth.signUp({email,password});
    if(error)throw error;
+
    if(data.session){
     message('تم إنشاء الحساب وتسجيل الدخول بنجاح.');
-    await refreshAuth();
+    await refreshAuth(data.session);
    }else{
-    message('تم إرسال رسالة تأكيد إلى بريدك الإلكتروني. افتح الرسالة وأكّد حسابك ثم ارجع لتسجيل الدخول.');
+    message('تم إنشاء الحساب. إذا طلب منك تأكيد البريد، افتح رسالة التأكيد ثم ارجع لتسجيل الدخول.');
    }
   }else{
-   const {error}=await sb.auth.signInWithPassword({email,password});
+   const {data,error}=await sb.auth.signInWithPassword({email,password});
    if(error)throw error;
+
    message('تم تسجيل الدخول بنجاح.');
-   await refreshAuth();
+   await refreshAuth(data.session);
   }
- }catch(err){message(err.message||'حدث خطأ أثناء تسجيل الدخول.','err');}
- finally{$('authSubmit').disabled=false;}
+ }catch(err){
+  message(err.message||'حدث خطأ أثناء تسجيل الدخول.','err');
+ }finally{
+  $('authSubmit').disabled=false;
+ }
 });
 
 $('logoutBtn').addEventListener('click',async()=>{
- await sb.auth.signOut();
- isAdmin=false;currentUser=null;
+ const {error}=await sb.auth.signOut();
+
+ if(error){
+  message(error.message,'err');
+  return;
+ }
+
+ currentUser=null;
+ isAdmin=false;
  message('تم تسجيل الخروج.');
- await refreshAuth();
+ await refreshAuth(null);
 });
 
 async function uploadImage(file){
  if(!file)return null;
- if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('نوع الصورة غير مدعوم.');
- if(file.size>5*1024*1024)throw new Error('حجم الصورة أكبر من 5 ميغابايت.');
+
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type))
+  throw new Error('نوع الصورة غير مدعوم.');
+
+ if(file.size>5*1024*1024)
+  throw new Error('حجم الصورة أكبر من 5 ميغابايت.');
+
  const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
  const path=`${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
- const {error}=await sb.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});
+
+ const {error}=await sb.storage.from(BUCKET).upload(path,file,{
+  contentType:file.type,
+  upsert:false
+ });
+
  if(error)throw error;
+
  const {data}=sb.storage.from(BUCKET).getPublicUrl(path);
  return data.publicUrl;
 }
 
 $('adForm').addEventListener('submit',async e=>{
- e.preventDefault();clearMessage();
- if(!currentUser){message('سجّل الدخول أولاً.','err');openAuth();return;}
+ e.preventDefault();
+ clearMessage();
+
+ if(!currentUser){
+  message('سجّل الدخول أولاً.','err');
+  openAuth();
+  return;
+ }
+
  const btn=$('submitAd');
- btn.disabled=true;btn.textContent='جاري إرسال الإعلان...';
+ btn.disabled=true;
+ btn.textContent='جاري الحفظ...';
+
  try{
   const file=$('imageFile').files[0];
-  const image_url=await uploadImage(file);
+  let image_url=editingAd?.image_url||null;
+
+  if(file)image_url=await uploadImage(file);
+
   const payload={
    title:$('title').value.trim(),
    category:$('category').value,
@@ -382,55 +675,172 @@ $('adForm').addEventListener('submit',async e=>{
    price:$('price').value.trim(),
    phone:$('phone').value.trim(),
    image_url,
-   city:'البوكمال',
-   status:'pending',
-   user_id:currentUser.id
+   city:'البوكمال'
   };
-  const {error}=await sb.from('ads').insert(payload);
-  if(error)throw error;
-  $('adForm').reset();
+
+  if(editingAd){
+   if(editingAd.asAdmin){
+    const {error}=await sb.from('ads')
+     .update(payload)
+     .eq('id',editingAd.id);
+    if(error)throw error;
+    message('تم حفظ تعديلات المدير بنجاح.');
+   }else{
+    payload.status='pending';
+    const {error}=await sb.from('ads')
+     .update(payload)
+     .eq('id',editingAd.id)
+     .eq('user_id',currentUser.id);
+    if(error)throw error;
+    message('تم تعديل إعلانك وإرساله للمراجعة من جديد.');
+   }
+  }else{
+   payload.status='pending';
+   payload.user_id=currentUser.id;
+
+   const {error}=await sb.from('ads').insert(payload);
+   if(error)throw error;
+
+   message('وصل إعلانك بنجاح، وهو الآن قيد المراجعة بانتظار موافقة المدير.');
+  }
+
   $('adFormBox').classList.add('hidden');
-  message('وصل إعلانك بنجاح، وهو الآن قيد المراجعة بانتظار موافقة المدير.');
+  resetAdForm();
+
+  await loadPublicAds();
+  await loadMyAds();
+
   if(isAdmin)await loadAdminAds();
- }catch(err){message(err.message||'تعذر إرسال الإعلان. حاول مرة ثانية.','err');}
- finally{btn.disabled=false;btn.textContent='إرسال الإعلان للمراجعة';}
+
+ }catch(err){
+  console.error(err);
+  message(err.message||'تعذر حفظ الإعلان. حاول مرة ثانية.','err');
+ }finally{
+  btn.disabled=false;
+  if(editingAd){
+   btn.textContent=editingAd.asAdmin?'حفظ التعديلات':'حفظ التعديلات وإرسال للمراجعة';
+  }else{
+   btn.textContent='إرسال الإعلان للمراجعة';
+  }
+ }
 });
 
 $('filters').addEventListener('click',async e=>{
  const b=e.target.closest('[data-category]');
  if(!b)return;
+
  selectedCategory=b.dataset.category;
- document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===b));
+ document.querySelectorAll('.chip').forEach(x=>
+  x.classList.toggle('active',x===b)
+ );
  await loadPublicAds();
 });
-$('searchBtn').addEventListener('click',loadPublicAds);
-$('search').addEventListener('keydown',e=>{if(e.key==='Enter')loadPublicAds();});
 
-document.querySelectorAll('[data-admin-filter]').forEach(b=>{
- b.addEventListener('click',async()=>{
-  adminFilter=b.dataset.adminFilter;
-  document.querySelectorAll('[data-admin-filter]').forEach(x=>x.classList.toggle('active',x===b));
-  await loadAdminAds();
- });
+$('searchBtn').addEventListener('click',loadPublicAds);
+$('search').addEventListener('keydown',e=>{
+ if(e.key==='Enter')loadPublicAds();
+});
+
+$('myAdsTabs').addEventListener('click',async e=>{
+ const b=e.target.closest('[data-my-filter]');
+ if(!b)return;
+
+ myFilter=b.dataset.myFilter;
+
+ $('myAdsTabs').querySelectorAll('button').forEach(x=>
+  x.classList.toggle('active',x===b)
+ );
+
+ await loadMyAds();
+});
+
+$('adminTabs').addEventListener('click',async e=>{
+ const b=e.target.closest('[data-admin-filter]');
+ if(!b)return;
+
+ adminFilter=b.dataset.adminFilter;
+
+ $('adminTabs').querySelectorAll('button').forEach(x=>
+  x.classList.toggle('active',x===b)
+ );
+
+ await loadAdminAds();
+});
+
+$('myAdsGrid').addEventListener('click',async e=>{
+ const b=e.target.closest('[data-action]');
+ if(!b)return;
+
+ const id=b.dataset.id;
+ const ad=myAds.find(x=>String(x.id)===String(id));
+ if(!ad)return;
+
+ if(b.dataset.action==='my-edit'){
+  startEdit(ad,false);
+  return;
+ }
+
+ if(b.dataset.action==='my-delete'){
+  if(!confirm('هل أنت متأكد أنك تريد حذف إعلانك نهائياً؟'))return;
+
+  b.disabled=true;
+
+  try{
+   const {error}=await sb.from('ads')
+    .delete()
+    .eq('id',id)
+    .eq('user_id',currentUser.id);
+
+   if(error)throw error;
+
+   message('تم حذف إعلانك بنجاح.');
+   await loadMyAds();
+   await loadPublicAds();
+  }catch(err){
+   message(err.message||'تعذر حذف الإعلان.','err');
+   b.disabled=false;
+  }
+ }
 });
 
 $('adminGrid').addEventListener('click',async e=>{
  const b=e.target.closest('[data-action]');
  if(!b)return;
+
  const id=b.dataset.id;
  const action=b.dataset.action;
  const ad=allAdminAds.find(x=>String(x.id)===String(id));
  if(!ad)return;
+
+ if(action==='admin-edit'){
+  startEdit(ad,true);
+  return;
+ }
+
  try{
-  if(action==='delete'){
+  if(action==='admin-delete'){
    if(!confirm('هل أنت متأكد من حذف الإعلان نهائياً؟'))return;
+
    const {error}=await sb.from('ads').delete().eq('id',id);
    if(error)throw error;
-   
-message('تم تحديث حالة الإعلان: '+statusName(status));
+
+   message('تم حذف الإعلان نهائياً.');
   }
+
+  if(action==='approve'||action==='hide'||action==='reject'){
+   const status=action==='approve'?'active':
+    action==='hide'?'hidden':'rejected';
+
+   const {error}=await sb.from('ads').update({status}).eq('id',id);
+   if(error)throw error;
+
+   message('تم تحديث حالة الإعلان: '+statusName(status));
+  }
+
   await loadAdminAds();
   await loadPublicAds();
+  await loadMyAds();
+
  }catch(err){
   message(err.message||'حدث خطأ أثناء تنفيذ العملية.','err');
  }
@@ -438,10 +848,16 @@ message('تم تحديث حالة الإعلان: '+statusName(status));
 
 async function init(){
  try{
-  await refreshAuth();
-  sb.auth.onAuthStateChange(async()=>{
-   await refreshAuth();
+  const {data,error}=await sb.auth.getSession();
+  if(error)throw error;
+
+  await refreshAuth(data.session);
+
+  sb.auth.onAuthStateChange((event,session)=>{
+   if(event==='INITIAL_SESSION')return;
+   Promise.resolve().then(()=>refreshAuth(session));
   });
+
  }catch(err){
   console.error('Initialization error:',err);
   message('حدث خطأ أثناء تشغيل الموقع. يرجى تحديث الصفحة.','err');
