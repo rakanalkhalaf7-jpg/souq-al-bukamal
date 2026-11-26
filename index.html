@@ -125,7 +125,25 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 12px}
   </form>
   <p class="note" id="authHint">ما عندك حساب؟ <a href="#" id="toggleAuth">إنشاء حساب جديد</a></p>
  </section>
+<section id="resetPasswordBox" class="authbox hidden">
+  <div class="sectionhead">
+    <h2>تعيين كلمة مرور جديدة</h2>
+  </div>
 
+  <form id="resetPasswordForm">
+    <div class="field">
+      <label>كلمة المرور الجديدة</label>
+      <input id="newPassword" type="password" minlength="6" required autocomplete="new-password" placeholder="ستة أحرف على الأقل">
+    </div>
+
+    <div class="field">
+      <label>تأكيد كلمة المرور</label>
+      <input id="confirmNewPassword" type="password" minlength="6" required autocomplete="new-password" placeholder="أعد كتابة كلمة المرور">
+    </div>
+
+    <button class="btn green" type="submit" id="resetPasswordSubmit">حفظ كلمة المرور الجديدة</button>
+  </form>
+</section>
  <section id="accountBox" class="panel hidden">
   <div class="sectionhead">
    <h2>حسابك</h2>
