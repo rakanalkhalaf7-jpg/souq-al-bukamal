@@ -13,12 +13,33 @@ import android.webkit.WebResourceError;
 import android.content.Intent;
 import android.net.Uri;
 import android.graphics.Color;
-import android.widget.Toast;
+import android.widget.TextView;
+import android.view.ViewGroup;
+import android.util.Log;
 
 public class MainActivity extends Activity {
 
     private WebView webView;
     private ValueCallback<Uri[]> fileCallback;
+
+    private void showError(Throwable e) {
+        Log.e("SouqCrash", "Application error", e);
+
+        TextView errorView = new TextView(this);
+        errorView.setTextColor(Color.RED);
+        errorView.setBackgroundColor(Color.WHITE);
+        errorView.setTextSize(16);
+        errorView.setPadding(30, 50, 30, 50);
+
+        errorView.setText(
+            "خطأ في تشغيل سوق البوكمال\n\n" +
+            e.getClass().getName() +
+            "\n\n" +
+            String.valueOf(e.getMessage())
+        );
+
+        setContentView(errorView);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +56,6 @@ public class MainActivity extends Activity {
             settings.setLoadsImagesAutomatically(true);
             settings.setAllowFileAccess(false);
             settings.setJavaScriptCanOpenWindowsAutomatically(true);
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
 
             webView.setWebViewClient(new WebViewClient() {
 
@@ -43,7 +63,6 @@ public class MainActivity extends Activity {
                 public boolean shouldOverrideUrlLoading(
                         WebView view,
                         WebResourceRequest request) {
-
                     return handleUrl(request.getUrl().toString());
                 }
 
@@ -51,12 +70,12 @@ public class MainActivity extends Activity {
                 public boolean shouldOverrideUrlLoading(
                         WebView view,
                         String url) {
-
                     return handleUrl(url);
                 }
 
                 private boolean handleUrl(String url) {
-                    if (url.startsWith("https://souq-al-bukamal.pages.dev")) {
+                    if (url.startsWith(
+                            "https://souq-al-bukamal.pages.dev")) {
                         return false;
                     }
 
@@ -70,11 +89,7 @@ public class MainActivity extends Activity {
                                 Uri.parse(url)
                             ));
                         } catch (Exception e) {
-                            Toast.makeText(
-                                MainActivity.this,
-                                "تعذر فتح الرابط",
-                                Toast.LENGTH_SHORT
-                            ).show();
+                            Log.e("SouqCrash", "Link error", e);
                         }
                         return true;
                     }
@@ -89,11 +104,11 @@ public class MainActivity extends Activity {
                         WebResourceError error) {
 
                     if (request.isForMainFrame()) {
-                        Toast.makeText(
-                            MainActivity.this,
-                            "تعذر تحميل السوق، تحقق من الإنترنت",
-                            Toast.LENGTH_LONG
-                        ).show();
+                        Log.e(
+                            "SouqCrash",
+                            "Website loading error: " +
+                            error.getDescription()
+                        );
                     }
                 }
             });
@@ -119,25 +134,18 @@ public class MainActivity extends Activity {
                     } catch (Exception e) {
                         fileCallback = null;
                         callback.onReceiveValue(null);
-                        Toast.makeText(
-                            MainActivity.this,
-                            "تعذر فتح اختيار الصور",
-                            Toast.LENGTH_SHORT
-                        ).show();
+                        Log.e("SouqCrash", "File chooser error", e);
                         return false;
                     }
                 }
             });
 
-            webView.loadUrl("https://souq-al-bukamal.pages.dev");
+            webView.loadUrl(
+                "https://souq-al-bukamal.pages.dev"
+            );
 
-        } catch (Exception e) {
-            Toast.makeText(
-                this,
-                "حدث خطأ أثناء تشغيل التطبيق",
-                Toast.LENGTH_LONG
-            ).show();
-            finish();
+        } catch (Throwable e) {
+            showError(e);
         }
     }
 
@@ -150,8 +158,11 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 100 && fileCallback != null) {
-            Uri[] results = WebChromeClient.FileChooserParams
-                    .parseResult(resultCode, data);
+            Uri[] results =
+                WebChromeClient.FileChooserParams.parseResult(
+                    resultCode,
+                    data
+                );
 
             fileCallback.onReceiveValue(results);
             fileCallback = null;
@@ -169,10 +180,16 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        if (fileCallback != null) {
+            fileCallback.onReceiveValue(null);
+            fileCallback = null;
+        }
+
         if (webView != null) {
             webView.destroy();
             webView = null;
         }
+
         super.onDestroy();
     }
 }
