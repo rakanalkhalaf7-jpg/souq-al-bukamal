@@ -896,7 +896,53 @@ $('adminGrid').addEventListener('click',async e=>{
   message(err.message||'حدث خطأ أثناء تنفيذ العملية.','err');
  }
 });
+function showPasswordReset(){
+ $('authBox').classList.add('hidden');
+ $('accountBox').classList.add('hidden');
+ $('adFormBox').classList.add('hidden');
+ $('resetPasswordBox').classList.remove('hidden');
+ $('resetPasswordBox').scrollIntoView({behavior:'smooth'});
+}
 
+$('resetPasswordForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ clearMessage();
+
+ const password=$('newPassword').value;
+ const confirm=$('confirmNewPassword').value;
+
+ if(password.length<6){
+  message('كلمة المرور يجب أن تكون 6 أحرف على الأقل.','err');
+  return;
+ }
+
+ if(password!==confirm){
+  message('كلمتا المرور غير متطابقتين.','err');
+  return;
+ }
+
+ const btn=$('resetPasswordSubmit');
+ btn.disabled=true;
+
+ try{
+  const {error}=await sb.auth.updateUser({password:password});
+  if(error)throw error;
+
+  $('resetPasswordForm').reset();
+  $('resetPasswordBox').classList.add('hidden');
+  history.replaceState({},document.title,location.pathname);
+
+  await sb.auth.signOut();
+  await refreshAuth(null);
+  openAuth();
+
+  message('تم تغيير كلمة المرور بنجاح. يمكنك تسجيل الدخول بكلمة المرور الجديدة.');
+ }catch(err){
+  message(err.message||'تعذر تغيير كلمة المرور. ربما انتهت صلاحية الرابط.','err');
+ }finally{
+  btn.disabled=false;
+ }
+});
 async function init(){
  try{
   const {data,error}=await sb.auth.getSession();
