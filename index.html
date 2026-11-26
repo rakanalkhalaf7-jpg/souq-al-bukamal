@@ -378,7 +378,7 @@ async function loadPublicAds(){
  $('count').textContent=(data?.length||0)+' إعلان';
  $('adsGrid').innerHTML=data?.length
   ?data.map(a=>adCard(a,'public')).join('')
-  :'<div class="empty">ماكو إعلانات منشورة بهذا القسم حالياً.</div>';
+  :'<div class="empty">لا يوجد إعلانات منشورة بهذا القسم حالياً.</div>';
 }
 
 async function checkAdmin(){
