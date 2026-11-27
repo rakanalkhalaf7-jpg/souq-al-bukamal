@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
     private boolean pageLoaded = false;
 
     private static final String HOME =
-            "https://souq-al-bukamal.pages.dev/";
+            "https://souq-albukamal.rakan-alkhalaf7.workers.dev/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +159,7 @@ public class MainActivity extends Activity {
 
                 if (url.startsWith(HOME)
                         || url.startsWith(
-                        "https://souq-al-bukamal.pages.dev/")) {
+                        "https://souq-albukamal.rakan-alkhalaf7.workers.dev/")) {
                     return false;
                 }
 
