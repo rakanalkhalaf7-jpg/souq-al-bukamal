@@ -362,7 +362,7 @@ function adCard(ad,mode='public'){
  images=images.filter(Boolean).slice(0,5);
 
  const gallery=images.length
-  ? `<div class="gallery" data-gallery>
+  ? `<div class="gallery" data-gallery data-images="${esc(JSON.stringify(images))}">
       <img src="${esc(images[0])}" alt="${esc(ad.title)}" loading="lazy" data-viewer>
       ${images.length>1?`
        <button class="gallery-nav gallery-prev" data-gallery-prev type="button">›</button>
