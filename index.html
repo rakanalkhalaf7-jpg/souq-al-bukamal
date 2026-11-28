@@ -527,7 +527,43 @@ async function refreshAuth(session){
   if(isAdmin)await loadAdminAds();
  }
 }
+ function changeGallery(button,direction){
+ const gallery=button.closest('[data-gallery]');
+ if(!gallery)return;
 
+ let images=[];
+ try{
+  images=JSON.parse(gallery.dataset.images||'[]');
+ }catch(e){return;}
+
+ if(images.length<2)return;
+
+ let index=Number(gallery.dataset.index||0);
+ index=(index+direction+images.length)%images.length;
+
+ gallery.dataset.index=index;
+
+ const img=gallery.querySelector('img');
+ img.src=images[index];
+
+ const count=gallery.querySelector('.gallery-count');
+ if(count)count.textContent=`${index+1} / ${images.length}`;
+}
+
+document.addEventListener('click',function(e){
+ const prev=e.target.closest('[data-gallery-prev]');
+ const next=e.target.closest('[data-gallery-next]');
+
+ if(prev){
+  changeGallery(prev,1);
+  return;
+ }
+
+ if(next){
+  changeGallery(next,-1);
+  return;
+ }
+});
 function openAuth(){
  clearMessage();
  $('authBox').classList.remove('hidden');
