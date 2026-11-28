@@ -739,18 +739,32 @@ for(const file of files){
   throw new Error('حجم إحدى الصور أكبر من 5 ميغابايت.');
 }
   let image_url=editingAd?.image_url||null;
+let image_urls=[];
 
-  if(file)image_url=await uploadImage(file);
+try{
+ const oldImages=editingAd?.image_urls;
+ image_urls=Array.isArray(oldImages)
+  ? oldImages
+  : (oldImages ? JSON.parse(oldImages) : []);
+}catch(e){
+ image_urls=[];
+}
 
-  const payload={
-   title:$('title').value.trim(),
-   category:$('category').value,
-   description:$('description').value.trim(),
-   price:$('price').value.trim(),
-   phone:$('phone').value.trim(),
-   image_url,
-   city:'البوكمال'
-  };
+if(files.length){
+ image_urls=await uploadImages(files);
+ image_url=image_urls[0]||null;
+}
+
+const payload={
+ title:$('title').value.trim(),
+ category:$('category').value,
+ description:$('description').value.trim(),
+ price:$('price').value.trim(),
+ phone:$('phone').value.trim(),
+ image_url,
+ image_urls:JSON.stringify(image_urls),
+ city:'البوكمال'
+};
 
   if(editingAd){
    if(editingAd.asAdmin){
