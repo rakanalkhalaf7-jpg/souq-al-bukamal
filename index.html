@@ -344,8 +344,32 @@ function phoneLink(phone){
 }
 
 function adCard(ad,mode='public'){
- const image=ad.image_url
-  ? `<img src="${esc(ad.image_url)}" alt="${esc(ad.title)}" loading="lazy">`
+ let images=[];
+
+ try{
+  const saved=ad.image_urls;
+  images=Array.isArray(saved)
+   ? saved
+   : (saved ? JSON.parse(saved) : []);
+ }catch(e){
+  images=[];
+ }
+
+ if(!images.length && ad.image_url){
+  images=[ad.image_url];
+ }
+
+ images=images.filter(Boolean).slice(0,5);
+
+ const gallery=images.length
+  ? `<div class="gallery" data-gallery>
+      <img src="${esc(images[0])}" alt="${esc(ad.title)}" loading="lazy" data-viewer>
+      ${images.length>1?`
+       <button class="gallery-nav gallery-prev" data-gallery-prev type="button">›</button>
+       <button class="gallery-nav gallery-next" data-gallery-next type="button">‹</button>
+       <span class="gallery-count">1 / ${images.length}</span>
+      `:''}
+     </div>`
   : `<div class="noimage">📦</div>`;
 
  const status=mode!=='public'
@@ -374,7 +398,7 @@ function adCard(ad,mode='public'){
  }
 
  return `<article class="card">
-  ${image}
+  ${gallery}
   <div class="cardbody">
    <h3>${esc(ad.title)}</h3>
    <div class="meta">${esc(ad.category||'')} · ${esc(ad.city||'البوكمال')} · ${dateText(ad.created_at)}</div>
