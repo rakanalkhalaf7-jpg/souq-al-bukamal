@@ -715,7 +715,18 @@ $('adForm').addEventListener('submit',async e=>{
  btn.textContent='جاري الحفظ...';
 
  try{
-  const file=$('imageFile').files[0];
+  const files=Array.from($('imageFile').files);
+
+if(files.length>5)
+ throw new Error('مسموح اختيار 5 صور فقط.');
+
+for(const file of files){
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type))
+  throw new Error('نوع إحدى الصور غير مدعوم.');
+
+ if(file.size>5*1024*1024)
+  throw new Error('حجم إحدى الصور أكبر من 5 ميغابايت.');
+}
   let image_url=editingAd?.image_url||null;
 
   if(file)image_url=await uploadImage(file);
