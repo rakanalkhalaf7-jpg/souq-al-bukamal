@@ -1085,5 +1085,31 @@ rel="noopener"
 style="position:fixed;bottom:20px;left:20px;background:#25D366;color:white;padding:13px 18px;border-radius:30px;text-decoration:none;font-weight:bold;z-index:9999;">
 تواصل مع إدارة السوق عبر واتساب
 </a>
+ <div id="imageViewer" class="image-viewer hidden">
+ <button class="image-viewer-close" type="button" onclick="closeImageViewer()">×</button>
+ <img id="imageViewerImg" src="" alt="صورة الإعلان">
+</div>
+
+<script>
+function closeImageViewer(){
+ document.getElementById('imageViewer').classList.add('hidden');
+ document.getElementById('imageViewerImg').src='';
+}
+
+document.addEventListener('click',function(e){
+ const img=e.target.closest('.gallery img');
+ if(!img)return;
+
+ const viewer=document.getElementById('imageViewer');
+ const viewerImg=document.getElementById('imageViewerImg');
+
+ viewerImg.src=img.src;
+ viewer.classList.remove('hidden');
+});
+
+document.getElementById('imageViewer').addEventListener('click',function(e){
+ if(e.target===this)closeImageViewer();
+});
+</script>
 </body>
 </html>
