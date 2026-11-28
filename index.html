@@ -700,6 +700,17 @@ async function uploadImage(file){
  return data.publicUrl;
 }
 
+async function uploadImages(files){
+ const urls=[];
+
+ for(const file of files){
+  const url=await uploadImage(file);
+  if(url)urls.push(url);
+ }
+
+ return urls;
+}
+
 $('adForm').addEventListener('submit',async e=>{
  e.preventDefault();
  clearMessage();
